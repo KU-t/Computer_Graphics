@@ -202,8 +202,7 @@ void Draw_Coordinates() {
 	//Yรเ
 	glPushMatrix();
 	glTranslatef(0.f, 26.f, 0.f);
-	glRotatef(90.f, 0.f, 0.f, 1.f);
-	glScalef(25.f, 1.f, 1.f);
+	glScalef(1.f, 25.f, 1.f);
 	glColor3f(0.f, 1.f, 0.f);
 	glutSolidCube(2);
 	glPopMatrix();
@@ -217,8 +216,7 @@ void Draw_Coordinates() {
 	//Zรเ
 	glPushMatrix();
 	glTranslatef(0.f, 0.f, 26.f);
-	glRotatef(90.f, 0.f, 1.f, 0.f);
-	glScalef(25.f, 1.f, 1.f);
+	glScalef(1.f, 1.f, 25.f);
 	glColor3f(0.f, 0.f, 1.f);
 	glutSolidCube(2);
 	glPopMatrix();

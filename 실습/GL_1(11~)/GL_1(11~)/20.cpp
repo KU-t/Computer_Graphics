@@ -30,6 +30,22 @@ public:
 	}
 };
 
+class Arm {
+public:
+	float x = 0;
+	float radian_x = 0, radian_y = 0;
+	bool spin_x_sw = false, spin_y_sw = false;
+	float size_x = 0, size_y = 0, size_z = 0;
+
+	Arm(){}
+
+	Arm(int x, int y, int z) : size_x(x),size_y(y),size_z(z){}
+
+	void Draw(int bottom) {
+		glTranslatef(0, bottom * 2, 0);
+	}
+};
+
 Angle Angle_x, Angle_y, Angle_z;
 float move_x = 0, move_y = 0, move_z = 0;
 
@@ -201,8 +217,7 @@ void Draw_Coordinates() {
 	//Y√‡
 	glPushMatrix();
 	glTranslatef(0.f, 26.f, 0.f);
-	glRotatef(90.f, 0.f, 0.f, 1.f);
-	glScalef(25.f, 1.f, 1.f);
+	glScalef(1.f, 25.f, 1.f);
 	glColor3f(0.f, 1.f, 0.f);
 	glutSolidCube(2);
 	glPopMatrix();
@@ -216,8 +231,7 @@ void Draw_Coordinates() {
 	//Z√‡
 	glPushMatrix();
 	glTranslatef(0.f, 0.f, 26.f);
-	glRotatef(90.f, 0.f, 1.f, 0.f);
-	glScalef(25.f, 1.f, 1.f);
+	glScalef(1.f, 1.f, 25.f);
 	glColor3f(0.f, 0.f, 1.f);
 	glutSolidCube(2);
 	glPopMatrix();
