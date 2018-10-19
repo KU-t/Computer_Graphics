@@ -5,7 +5,7 @@
 #define W_z 600
 
 enum VIEW { Perspective, Orthographic };
-
+enum DIRECTION { Left, Right };
 VIEW View = Perspective;
 
 GLvoid drawScene(GLvoid);
@@ -18,6 +18,7 @@ void Change_Angle_xyz();
 void Change_View(VIEW view);
 void Draw_Coordinates();
 void Draw_bottom();
+void Move_arm_1();
 
 class Angle {
 public:
@@ -32,6 +33,7 @@ public:
 
 class Arm {
 public:
+	DIRECTION direction = Left;
 	float x = 0;
 	float radian_x = 0, radian_y = 0;
 	bool spin_x_sw = false, spin_y_sw = false;
@@ -39,15 +41,29 @@ public:
 
 	Arm(){}
 
-	Arm(int x, int y, int z) : size_x(x),size_y(y),size_z(z){}
+	Arm(float x, float y, float z) : size_x(x),size_y(y),size_z(z){}
 
-	void Draw(int bottom) {
-		glTranslatef(0, bottom * 2, 0);
+	void Draw(float bottom) {
+		glTranslatef(0, bottom, 0);
+		glRotatef(radian_x, 1.f, 0.f, 0.f);
+		glRotatef(radian_y, 0.f, 1.f, 0.f);
+
+		glPushMatrix();
+		glTranslatef(0.f, size_y / 2, 0.f);
+		glScalef(size_x, size_y, size_z);
+		glutSolidCube(1);
+		glScalef((size_x + 1) / size_x, (size_y + 1) / size_y, (size_z + 1) / size_z);
+		glColor4f(0.f, 0.f, 0.f, 0.f);
+		glutWireCube(1);
+		glPopMatrix();
 	}
 };
 
 Angle Angle_x, Angle_y, Angle_z;
 float move_x = 0, move_y = 0, move_z = 0;
+Arm arm_1(100.f, 50.f, 100.f);
+Arm arm_2(50.f, 150.f, 50.f);
+Arm arm_3(30.f, 150.f, 30.f);
 
 void main(int argc, char **argv) {
 	glutInit(&argc, argv);
@@ -86,8 +102,26 @@ GLvoid drawScene(GLvoid) {
 	Draw_Coordinates();
 	Draw_bottom();
 
-	glColor4f(1.f, 0.f, 0.f, 1.f);
-	glutWireTeapot(100);
+	glPushMatrix(); // arm_1 push
+	glTranslatef(arm_1.x, 0.f, 0.f);
+	glColor4f(1.f, 0.f, 0.f, 0.f);
+	arm_1.Draw(0.f);
+	
+
+	glPushMatrix(); // arm_2 push
+	glColor4f(0.f, 1.f, 0.f, 1.f);
+	arm_2.Draw(arm_1.size_y);
+	
+
+	glPushMatrix(); // arm_3 push
+	glColor4f(0.f, 0.f, 1.f, 1.f);
+	arm_3.Draw(arm_2.size_y);
+
+	glPopMatrix(); // arm_1 pop
+
+	glPopMatrix(); // arm_2 pop
+	
+	glPopMatrix(); // arm_3 pop
 
 	glPopMatrix();
 
@@ -113,6 +147,7 @@ void Motion(int x, int y) {
 
 void Timer(int value) {
 	Change_Angle_xyz();
+	Move_arm_1();
 	glutPostRedisplay();
 	glutTimerFunc(50, Timer, 1);
 }
@@ -163,6 +198,38 @@ void Keyboard(unsigned char key, int x, int y) {
 	case 'p':	case 'P':
 		View = (VIEW)((View + 1) % 2);
 		Reshape(800, 600);
+		break;
+
+	case 'f': case 'F':
+		if(arm_2.radian_x < 90.f)	arm_2.radian_x += 3.f;
+		break;
+
+	case 'v': case 'V':
+		if (arm_2.radian_x > -90.f)	arm_2.radian_x -= 3.f;
+		break;
+
+	case 'g': case 'G':
+		if (arm_2.radian_y < 90.f) arm_2.radian_y += 3.f;
+		break;
+
+	case 'b': case 'B':
+		if (arm_2.radian_y > -90.f)	arm_2.radian_y -= 3.f;
+		break;
+
+	case 'h': case 'H':
+		if (arm_3.radian_x < 90.f)	arm_3.radian_x += 3.f;
+		break;
+
+	case 'n': case 'N':
+		if (arm_3.radian_x > -90.f)	arm_3.radian_x -= 3.f;
+		break;
+
+	case 'j': case 'J':
+		if (arm_3.radian_y < 90.f)	arm_3.radian_y += 3.f;
+		break;
+
+	case 'm': case 'M':
+		if (arm_3.radian_y > -90.f)	arm_3.radian_y -= 3.f;
 		break;
 	}
 	glutPostRedisplay();
@@ -245,9 +312,20 @@ void Draw_Coordinates() {
 
 void Draw_bottom() {
 	glPushMatrix();
-	glTranslatef(0.f, -150.f, 0.f);
+	glTranslatef(0.f, -arm_1.size_y/2, 0.f);
 	glScalef(500.f, 1.f, 500.f);
 	glColor3f(1.f, 1.f, 0.f);
 	glutSolidCube(1.f);
 	glPopMatrix();
+}
+
+void Move_arm_1() {
+	if (arm_1.direction == Left) {
+		if (arm_1.x > -250.f + (float)(arm_1.size_x / 2))	arm_1.x -= 5.f;
+		else arm_1.direction = Right;
+	}
+	else if (arm_1.direction == Right) {
+		if (arm_1.x < 250.f - (float)(arm_1.size_x / 2))	arm_1.x += 5.f;
+		else arm_1.direction = Left;
+	}
 }
