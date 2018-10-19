@@ -70,7 +70,7 @@ void main(int argc, char **argv) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); // 디스플레이 모드 설정
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(W_x, W_y);
-	glutCreateWindow("11");
+	glutCreateWindow("20");
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(Keyboard);
 	glutMouseFunc(Mouse);
