@@ -1,5 +1,6 @@
 #include <gl/freeglut.h>
 #include <math.h>
+#include <time.h>
 
 #define W_x 800
 #define W_y 600
@@ -8,6 +9,9 @@
 
 enum VIEW { Perspective, Orthographic };
 enum ANIMATION {increase, decrease};
+enum MOVE { UP, LEFT, DOWN, RIGHT};
+
+
 VIEW View = Perspective;
 
 GLvoid drawScene(GLvoid);
@@ -24,6 +28,9 @@ void Obj_animation();
 void Draw_Tree();
 void Draw_horizontal();
 void Draw_bench_press();
+void 	Draw_Runningmachine();
+void Move_arm_1();
+void Check_Collision();
 
 class Angle {
 public:
@@ -36,8 +43,133 @@ public:
 	}
 };
 
+class Circle {
+public:
+	int x = 0, z = 0;
+	float radian_x = 0;
+	float radian_y = 0;
+	float radian_z = 0;
+	MOVE move = LEFT;
+
+	void Draw() {
+		glPushMatrix();
+		glTranslatef(x, 10.f, z);
+
+		glRotatef(radian_x, 1.f, 0.f, 0.f);
+
+		glRotatef(radian_y, 0.f, 1.f, 0.f);
+
+		glRotatef(radian_z, 0.f, 0.f, 1.f);
+
+		glColor4f(1.f, 0.f, 0.f, 0.f);
+		glutWireSphere(10, 10, 10);
+		//glColor4f(0.f, 0.f, 1.f, 1.f);
+		//glutSolidCone(50.f, 50.f, 10.f, 10.f);
+		glPopMatrix();
+	}
+
+	void Update() {
+		switch (move){
+		case UP:
+			if (z > -250) {
+				z -= 10;
+				radian_x -= 10.f;
+			}
+			else move = DOWN;
+			break;
+
+		case LEFT:
+			if (x > -250) {
+				x -= 10;
+				radian_z += 10.f;
+			}
+			else move = RIGHT;
+			break;
+
+		case DOWN:
+			if (z < 250) {
+				z += 10;
+				radian_x += 10.f;
+			}
+			else move = UP;
+			break;
+
+		case RIGHT:
+			if (x < 250) {
+				x += 10;
+				radian_z -= 10.f;
+			}
+			else move = LEFT;
+			break;
+		}
+	}
+};
+
+class Arm {
+public:
+	int x = 30, z = 0;
+	float radian_x = 0, radian_y = 0;
+	bool spin_x_sw = false, spin_y_sw = false;
+	float size_x = 0, size_y = 0, size_z = 0;
+	MOVE move = LEFT;
+	Arm() {}
+
+	Arm(float x, float y, float z) : size_x(x), size_y(y), size_z(z) {}
+
+	void Draw(float bottom) {
+		glTranslatef(0, bottom, 0);
+		glRotatef(radian_x, 1.f, 0.f, 0.f);
+		glRotatef(radian_y, 0.f, 1.f, 0.f);
+
+		glPushMatrix();
+		glTranslatef(0.f, size_y / 2, 0.f);
+		glScalef(size_x, size_y, size_z);
+		glutSolidCube(1);
+		glScalef((size_x + 1) / size_x, (size_y + 1) / size_y, (size_z + 1) / size_z);
+		glColor4f(0.f, 0.f, 0.f, 0.f);
+		glutWireCube(1);
+		glPopMatrix();
+	}
+
+	void Update() {
+		switch (move) {
+		case UP:
+			if (z > -250) {
+				z -= 5;
+			}
+			else move = DOWN;
+			break;
+
+		case LEFT:
+			if (x > -250) {
+				x -= 5;
+			}
+			else move = RIGHT;
+			break;
+
+		case DOWN:
+			if (z < 250) {
+				z += 5;
+			}
+			else move = UP;
+			break;
+
+		case RIGHT:
+			if (x < 250) {
+				x += 5;
+			}
+			else move = LEFT;
+			break;
+		}
+	}
+};
+
 Angle Angle_x, Angle_y, Angle_z;
 float move_x = 0, move_y = 0, move_z = 0;
+Circle circle;
+Arm arm_1(20.f, 10.f, 20.f);
+Arm arm_2(10.f, 30.f, 10.f);
+Arm arm_3(6.f, 30.f, 6.f);
 
 ANIMATION tree_animation = increase;
 float tree_size = 1.f;
@@ -48,7 +180,12 @@ float horizontal_human_radian_x = 0.f;
 ANIMATION bench_press_animation = increase;
 float bench_press_human_radian_x = 0.f;
 
+ANIMATION running_machine_animation = increase;
+float running_machine_human_radian_x = 0.f;
+float running_machine_radian = 0.f;
+
 void main(int argc, char **argv) {
+	srand((unsigned)time(NULL));
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); // µð½ºÇÃ·¹ÀÌ ¸ðµå ¼³Á¤
 	glutInitWindowPosition(100, 100);
@@ -86,11 +223,36 @@ GLvoid drawScene(GLvoid) {
 	Draw_Coordinates();
 	Draw_bottom();
 
-	glColor4f(1.f, 0.f, 0.f, 1.f);
-	
+
+	circle.Draw();
+
+	glPushMatrix(); // arm_1 push
+	glTranslatef(arm_1.x, 0.f, arm_1.z);
+	glColor4f(1.f, 0.f, 0.f, 0.f);
+	arm_1.Draw(0.f);
+
+
+	glPushMatrix(); // arm_2 push
+	glColor4f(0.f, 1.f, 0.f, 1.f);
+	arm_2.Draw(arm_1.size_y);
+
+
+	glPushMatrix(); // arm_3 push
+	glColor4f(0.f, 0.f, 1.f, 1.f);
+	arm_3.Draw(arm_2.size_y);
+
+	glPopMatrix(); // arm_1 pop
+
+	glPopMatrix(); // arm_2 pop
+
+	glPopMatrix(); // arm_3 pop
+
+	glPopMatrix();
+
 	Draw_Tree();
 	Draw_horizontal();
 	Draw_bench_press();
+	Draw_Runningmachine();
 
 	glPopMatrix();
 
@@ -117,6 +279,7 @@ void Motion(int x, int y) {
 void Timer(int value) {
 	Change_Angle_xyz();
 	Obj_animation();
+	Check_Collision();
 	glutPostRedisplay();
 	glutTimerFunc(50, Timer, 1);
 }
@@ -167,6 +330,14 @@ void Keyboard(unsigned char key, int x, int y) {
 	case 'p':	case 'P':
 		View = (VIEW)((View + 1) % 2);
 		Reshape(800, 600);
+		break;
+
+	case 'g':	case 'G':
+		circle.move = (MOVE)((circle.move + 1) % 4);
+		break;
+
+	case 'h':	case 'H':
+		arm_1.move = (MOVE)((arm_1.move + 1) % 4);
 		break;
 	}
 	glutPostRedisplay();
@@ -279,6 +450,19 @@ void Obj_animation() {
 		bench_press_human_radian_x -= 3.f;
 		if (bench_press_human_radian_x < 0.f)	bench_press_animation = increase;
 	}
+
+	if (running_machine_animation == increase) {
+		running_machine_human_radian_x += 3.f;
+		if (running_machine_human_radian_x > 30.f)	running_machine_animation = decrease;
+	}
+	else if (running_machine_animation == decrease) {
+		running_machine_human_radian_x -= 3.f;
+		if (running_machine_human_radian_x < -30.f)	running_machine_animation = increase;
+	}
+	
+	running_machine_radian += 3.f;
+	circle.Update();
+	arm_1.Update();
 }
 
 void Draw_Tree() {
@@ -329,7 +513,7 @@ void Draw_horizontal() {
 	glPushMatrix(); // ±âµÕ
 	glTranslatef(0.f, 50.f, 0.f);
 	glScalef(10.f, 100.f, 10.f);
-	glColor4f(0.2f, 0.2f, 0.8f, 1.f);
+	glColor4f(0.6f, 0.4f, 0.2f, 1.0f);
 	for (float i = -5.f; i < 10.f; i += 10.f) {
 		glPushMatrix();
 		glTranslatef(0.f, 0.f, i);
@@ -403,7 +587,7 @@ void Draw_bench_press() {
 	glPushMatrix(); // ±âµÕ
 	glTranslatef(0.f, 50.f, 0.f);
 	glScalef(10.f, 100.f, 10.f);
-	glColor4f(0.2f, 0.2f, 0.8f, 1.f);
+	glColor4f(0.6f, 0.4f, 0.2f, 1.0f);
 	for (float i = -5.f; i < 10.f; i += 10.f) {
 		glPushMatrix(); //
 		glTranslatef(0.f, 0.f, i);
@@ -415,7 +599,7 @@ void Draw_bench_press() {
 	glPushMatrix(); // ÀÛÀº±âµÕ
 	glTranslatef(-100.f, 20.f, 0.f);
 	glScalef(10.f, 40.f, 10.f);
-	glColor4f(0.2f, 0.2f, 0.8f, 1.f);
+	glColor4f(0.6f, 0.4f, 0.2f, 1.0f);
 	for (float i = -4.5f; i < 10.f; i += 9.f) {
 		glPushMatrix(); //
 		glTranslatef(0.f, 0.f, i);
@@ -530,4 +714,130 @@ void Draw_bench_press() {
 	glPopMatrix(); // »ç¶÷
 
 	glPopMatrix(); // x_z ÁÂÇ¥ÀÌµ¿
+}
+
+void 	Draw_Runningmachine() {
+	glPushMatrix(); // x_z ÁÂÇ¥ÀÌµ¿
+	glTranslatef(220.f, 0.f, -160.f);
+	glPushMatrix(); // Ã¶ºÀ
+	glPushMatrix(); // ±âµÕ
+	glTranslatef(0.f, 40.f, 0.f);
+	glScalef(10.f, 80.f, 10.f);
+	glColor4f(0.6f, 0.4f, 0.2f, 1.0f);
+	for (float i = -5.f; i < 10.f; i += 10.f) {
+		glPushMatrix(); //
+		glTranslatef(0.f, 0.f, i);
+		glutSolidCube(1);
+		glPopMatrix(); //
+	}
+	glPopMatrix(); // ±âµÕ
+	glTranslatef(0.f, 75.f, 0.f);
+	glScalef(5.f, 5.f, 100.f);
+	glColor4f(0.1f, 0.1f, 0.4f, 1.0f);
+	glutSolidCube(1);
+	glPopMatrix(); // Ã¶ºÀ
+
+	glPushMatrix(); // ·±´×¸Ó½Å
+	glTranslatef(-50.f,15.f,0.f);
+	glPushMatrix(); //¹Ù´Ú
+	glScalef(100.f, 1.f, 80.f);
+	glutSolidCube(1);
+	glPopMatrix(); // ¹Ù´Ú
+
+	for (float i = -1.f; i < 2.f; i += 2.f) {
+		for (float j = -1.f; j < 2.f; j += 2.f) {
+			glPushMatrix(); // Åä·¯½º
+			glColor4f(0.7f, 0.7f, 0.7f,1.0f);
+			glTranslatef(i * 50.f, -7.f, j * 40.f);
+			glRotatef(running_machine_human_radian_x, 0.f, 0.f, 1.f);
+			glutSolidTorus(2.5f, 5.f, 10, 10);
+			glPopMatrix(); //Åä·¯½º
+		}
+		glColor4f(0.1f, 0.1f, 0.4f, 1.0f);
+
+		glPushMatrix();
+		glTranslatef(i * 50.f, -7.f, 0.f);
+		glRotatef(running_machine_radian, 0.f, 0.f, 1.f);
+		for (float j = 0.f; j < 360.f; j += 45) {
+			float x = 7 * cos(deg(j));
+			float y = 7 * sin(deg(j));
+			glPushMatrix();
+			glTranslatef(x, y, 0.f);
+			glRotatef(j + 90.f, 0.f, 0.f, 1.f);
+			glScalef(5.f, 1.f, 80.f);
+			glutSolidCube(1);
+			glPopMatrix();
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();// ·±´×¸Ó½Å
+
+	glPushMatrix(); // »ç¶÷
+	glTranslatef(-40.f, 115.f, 0.f);
+
+	glPushMatrix(); // ÆÈ
+	glColor4f(1.f, 0.8f, 0.6f, 1.f);
+	glRotatef(-90.f, 0.f, 0.f, 1.f);
+	glRotatef(-180.f, 0.f, 1.f, 0.f);
+	for (float i = -30.f; i < 60.f; i += 60.f) {
+		glPushMatrix(); // 1
+		glTranslatef(-40.f, 15.f, i);
+		glRotatef(0.f, 0.1, 0.1, 0.1);
+		glScalef(10.f, 40.f, 10.f);
+		glutSolidCube(1);
+		glPopMatrix(); // 1
+	}
+	glPopMatrix(); // ÆÈ
+
+
+	glPushMatrix(); // 1
+	glTranslatef(0.f, -20.f, 0.f);
+	glColor4f(0.f, 0.f, 0.f, 0.f);
+	glutSolidSphere(20.f, 10.f, 10.f);
+	glTranslatef(10.f, -5.f, 0.f);
+	glColor4f(1.f, 0.8f, 0.6f, 1.f);
+	glutSolidSphere(15.f, 10.f, 10.f);
+	for (float i = -5.f; i < 15.f; i += 10.f) {
+		glPushMatrix();
+		glTranslatef(13.f, -2.f, i);
+		glColor4f(0.f, 0.f, 0.f, 1.f);
+		glutSolidSphere(2.f, 10.f, 10.f);
+		glPopMatrix();
+	}
+	glPopMatrix(); // 1
+
+	glPushMatrix();
+	glTranslatef(0.f, -50.f, 0.f);
+	glScalef(15.f, 40.f, 50.f);
+	glColor4f(0.7f, 0.f, 0.f, 1.f);
+	glutSolidCube(1);
+	glPopMatrix();
+
+
+	glPushMatrix(); // ´Ù¸®
+	for (float i = -1.f; i < 2.f; i += 2.f) {
+		glColor4f(0.f, 0.f, 0.7f, 1.f);
+		glPushMatrix();
+		glTranslatef(0.f, -60.f, i * 15.f);
+		glRotatef(i * running_machine_human_radian_x,0.f,0.f,1.f );
+		glPushMatrix();
+		glTranslatef(0.f, -20.f, 0.f);
+		glScalef(10.f, 40.f, 10.f);
+		glutSolidCube(1);
+		glPopMatrix();
+		glPopMatrix();
+	}
+	glPopMatrix(); // ´Ù¸®
+
+	glPopMatrix(); // »ç¶÷
+
+	glPopMatrix(); // x_z ÁÂÇ¥ÀÌµ¿
+}
+
+void Check_Collision() {
+	if( abs(circle.x - arm_1.x) <= 30)
+		if (abs(circle.z - arm_1.z) <= 30) {
+			circle.move = (MOVE)(rand() % 4);
+			arm_1.move = (MOVE)(rand() % 4);
+		}
 }
