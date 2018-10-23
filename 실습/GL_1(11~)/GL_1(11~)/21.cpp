@@ -247,13 +247,13 @@ GLvoid drawScene(GLvoid) {
 
 	glPopMatrix(); // arm_3 pop
 
-	glPopMatrix();
 
 	Draw_Tree();
 	Draw_horizontal();
 	Draw_bench_press();
 	Draw_Runningmachine();
 
+	glPopMatrix();
 	glPopMatrix();
 
 	glutSwapBuffers();
