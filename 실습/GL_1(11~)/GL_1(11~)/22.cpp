@@ -185,6 +185,9 @@ ANIMATION running_machine_animation = increase;
 float running_machine_human_radian_x = 0.f;
 float running_machine_radian = 0.f;
 
+float plane_radian = 0.f;
+float cloud_radian[5] = { -70.f,-60.f,-50.f,-40.f,-30.f };
+
 void main(int argc, char **argv) {
 	srand((unsigned)time(NULL));
 	glutInit(&argc, argv);
@@ -461,6 +464,10 @@ void Obj_animation() {
 	}
 
 	running_machine_radian += 3.f;
+	plane_radian += 3.f;
+	for (int i = 0; i < 5; i++) {
+		cloud_radian[i] += 3.f;
+	}
 	circle.Update();
 	arm_1.Update();
 }
@@ -835,10 +842,77 @@ void 	Draw_Runningmachine() {
 }
 
 void 	Draw_Plane() {
-	glPushMatrix();
+	glPushMatrix();// x_z 좌표이동
 	glTranslatef(0.f,200.f,0.f);
-	glutSolidCube(10);
+
+	glPushMatrix();// 비행기 동선
+	float x = 0, z = 0;
+	x = 100 * cos(deg(plane_radian));
+	z = 100 * sin(deg(plane_radian));
+	glTranslatef(x, 0, z);
+	glRotatef(-plane_radian, 0.f, 1.f, 0.f);
+	
+	glPushMatrix();// 비행기 
+	glPushMatrix();//날개
+	glScalef(3.f, 0.5f, 1.5f);
+	glColor4f(0.f, 0.f, 1.f, 0.f);
+	glutSolidCone(10.f, 10.f, 30.f, 30.f);
 	glPopMatrix();
+
+	glPushMatrix();//몸통
+	glScalef(1.f, 1.f, 2.f);
+	glColor4f(1.f, 1.f, 1.f,1.f);
+	glutSolidSphere(10,30,30);
+	glPopMatrix();
+
+	glPushMatrix();//꼬리
+	glTranslatef(0.f, 0.f, -20.f);
+	glScalef(0.5f, 0.5f, 2.f);
+	glColor4f(1.f, 1.f, 1.f, 1.f);
+	glutSolidSphere(10, 30, 30);
+	glPopMatrix();
+
+	glPushMatrix();//꼬리날개
+	glTranslatef(0.f, 0.f, -37.f);
+	glScalef(1.f, 0.4f, 1.5f);
+	glColor4f(0.f, 0.f, 1.f, 0.f);
+	glutSolidCone(10.f, 10.f, 30.f, 30.f);
+	glPopMatrix();
+
+	glPushMatrix();//꼬리날개
+	glTranslatef(0.f, 7.f, -37.f);
+	//glRotatef(-30.f, 0.f, 0.f, 1.f);
+	glScalef(0.3f, 1.f, 1.f);
+	glColor4f(0.f, 0.f, 1.f, 0.f);
+	glutSolidCone(10.f, 10.f, 30.f, 30.f);
+	glPopMatrix();
+
+	glPushMatrix();//꼬리날개
+	glTranslatef(0.f, 3.f, 15.f);
+	//glRotatef(-30.f, 0.f, 0.f, 1.f);
+	//glScalef(0.3f, 1.f, 1.f);
+	glColor4f(0.5f, 1.f, 1.f, 1.f);
+	glutSolidSphere(5.f, 30.f, 30.f);
+	glPopMatrix();
+
+	glPopMatrix();// 비행기 
+
+	glPopMatrix();// 비행기 동선
+
+	glColor4f(0.5f, 0.5f, 0.5f,1.f);
+	for (int i = 0; i < 5; i ++) {
+		glPushMatrix();// 구름 동선
+		float x = 0, z = 0;
+		x = 100 * cos(deg(cloud_radian[i]));
+		z = 100 * sin(deg(cloud_radian[i]));
+		glTranslatef(x, 0, z);
+		glRotatef(-plane_radian, 0.f, 1.f, 0.f);
+		glScalef((i+1)*2, (i + 1) * 2, (i + 1) * 2);
+		glutSolidRhombicDodecahedron();
+		glPopMatrix();// 구름 동선
+	}
+
+	glPopMatrix();//x_z 좌표이동
 }
 
 void Check_Collision() {
