@@ -199,6 +199,14 @@ void Keyboard(unsigned char key, int x, int y) {
 		if (circle.x < 250.f) circle.x += 10.f;
 		circle.radian_z -= 10.f;
 		break;
+
+	case 'n':  case 'N':
+		circle.radian_y += 10.f;
+		break;
+
+	case 'm':  case 'M':
+		circle.radian_y -= 10.f;
+		break;
 	}
 	glutPostRedisplay();
 }

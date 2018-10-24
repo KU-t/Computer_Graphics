@@ -1,5 +1,6 @@
 #include <gl/freeglut.h>
 #include <time.h>
+#include <math.h>
 
 #define W_x 800
 #define W_y 800
@@ -9,11 +10,13 @@
 enum VIEW { Perspective, Orthographic };
 enum TRIANGLE_TYPE { E, W, S, N };
 enum RECTANGLE_TYPE { CLICK_ON, CLICK_OFF };
+enum CLICK { ON, OFF };
 
 VIEW View = Perspective;
 float tri_y = 350.f,rec_x = 0.f, size = 30.f;
 int tri_Count = 0;
 int rec_Count = 0;
+float mx, my;
 
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
@@ -28,6 +31,7 @@ void Draw_bottom();
 void Check_Triangle();
 void Check_Rectangle();
 void 	Draw_Cell();
+void Draw_CHECK_Mouse_Line();
 
 class Angle {
 public:
@@ -81,9 +85,16 @@ public:
 	}
 };
 
+class Mouse_Click {
+public:
+	float x, y, click_x, click_y;
+	CLICK click = OFF;
+};
+
 Angle Angle_x, Angle_y, Angle_z;
 Triangles triangle[MAX_TRIANGLES];
 Rectangles rectangle[MAX_RECTANGLES];
+Mouse_Click mouse;
 
 void main(int argc, char **argv) {
 	glutInit(&argc, argv);
@@ -121,7 +132,7 @@ GLvoid drawScene(GLvoid) {
 	}
 
 	Draw_Cell();
-
+	Draw_CHECK_Mouse_Line();
 	glPushMatrix();
 
 	glRotatef(Angle_x.radian, 1.f, 0.f, 0.f);
@@ -146,13 +157,21 @@ GLvoid Reshape(int w, int h) {
 
 void Mouse(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-
+		mouse.click = ON;
+		mouse.click_x = (x - 400);
+		mouse.click_y = -( y - 400);
+		mouse.x = (x - 400);
+		mouse.y = -(y - 400);
+	}
+	else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+		mouse.click = OFF;
 	}
 	glutPostRedisplay();
 }
 
 void Motion(int x, int y) {
-
+	mouse.x = (x - 400);
+	mouse.y = -(y - 400);
 	glutPostRedisplay();
 }
 
@@ -260,8 +279,6 @@ void Draw_bottom() {
 	glPopMatrix();
 }
 
-
-
 void Check_Triangle() {
 	if (tri_Count == 0) {
 		for (int i = 0; i < MAX_TRIANGLES; i++) {
@@ -290,6 +307,7 @@ void Check_Rectangle() {
 			if (!(rectangle[i].exist)) {
 				rectangle[i].exist = true;
 				rectangle[i].y = -400.f - size;
+				rectangle[i].type = CLICK_ON;
 				break;
 			}
 		}
@@ -302,9 +320,13 @@ void Check_Rectangle() {
 					rectangle[i].type = CLICK_OFF;
 				}
 			}
+			else if (rectangle[i].type == CLICK_OFF) {
+				if (rectangle[i].y - size >= 400.f)
+					rectangle[i].exist = false;
+			}
 		}
 	}
-	rec_Count = (rec_Count + 1) % 200;
+	rec_Count = (rec_Count + 1) % 100;
 }
 
 
@@ -349,4 +371,26 @@ void 	Draw_Cell() {
 	glVertex3f(0.f, -400.f, -100.f);
 	glVertex3f(0.f, -325.f, -100.f);
 	glEnd();
+}
+
+void Draw_CHECK_Mouse_Line() {
+	if (mouse.click == ON) {
+		glBegin(GL_LINES);
+		glColor4f(1.f, 0.f, 0.f, 1.f);
+		glVertex3f(mouse.click_x, mouse.click_y, -100.f);
+		glVertex3f(mouse.x, mouse.y, -100.f);
+		glEnd();
+	}
+	else if (mouse.click == OFF) {
+		float mx = mouse.click_x - mouse.x;
+		float my = mouse.click_y - mouse.y;
+		for (int i = 0; i < MAX_RECTANGLES; i++) {
+			if (rectangle[i].exist && rectangle[i].type == CLICK_ON) {
+				float d = (float)abs(-(long)rectangle[i].y + (long)(mx*mouse.click_y / my) - (long)mouse.click_x) / (float)sqrt(my*my / (mx*mx) + 1);
+				if (d <= 10.f) {
+					rectangle[i].type = CLICK_OFF;
+				}
+			}
+		}
+	}
 }
