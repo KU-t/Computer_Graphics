@@ -31,7 +31,8 @@ void Draw_bottom();
 void Check_Triangle();
 void Check_Rectangle();
 void 	Draw_Cell();
-void Draw_CHECK_Mouse_Line();
+void Draw_Mouse_Line();
+void CHECK_Mouse_Line();
 
 class Angle {
 public:
@@ -132,7 +133,7 @@ GLvoid drawScene(GLvoid) {
 	}
 
 	Draw_Cell();
-	Draw_CHECK_Mouse_Line();
+	Draw_Mouse_Line();
 	glPushMatrix();
 
 	glRotatef(Angle_x.radian, 1.f, 0.f, 0.f);
@@ -165,6 +166,7 @@ void Mouse(int button, int state, int x, int y) {
 	}
 	else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
 		mouse.click = OFF;
+		CHECK_Mouse_Line();
 	}
 	glutPostRedisplay();
 }
@@ -326,7 +328,7 @@ void Check_Rectangle() {
 			}
 		}
 	}
-	rec_Count = (rec_Count + 1) % 100;
+	rec_Count = (rec_Count + 1) % 50;
 }
 
 
@@ -373,23 +375,28 @@ void 	Draw_Cell() {
 	glEnd();
 }
 
-void Draw_CHECK_Mouse_Line() {
+void Draw_Mouse_Line() {
 	if (mouse.click == ON) {
 		glBegin(GL_LINES);
 		glColor4f(1.f, 0.f, 0.f, 1.f);
 		glVertex3f(mouse.click_x, mouse.click_y, -100.f);
 		glVertex3f(mouse.x, mouse.y, -100.f);
 		glEnd();
+
+	
+		
+	
 	}
-	else if (mouse.click == OFF) {
-		float mx = mouse.click_x - mouse.x;
-		float my = mouse.click_y - mouse.y;
-		for (int i = 0; i < MAX_RECTANGLES; i++) {
-			if (rectangle[i].exist && rectangle[i].type == CLICK_ON) {
-				float d = (float)abs(-(long)rectangle[i].y + (long)(mx*mouse.click_y / my) - (long)mouse.click_x) / (float)sqrt(my*my / (mx*mx) + 1);
-				if (d <= 10.f) {
-					rectangle[i].type = CLICK_OFF;
-				}
+}
+
+void CHECK_Mouse_Line() {
+	float mx = mouse.click_x - mouse.x;
+	float my = mouse.click_y - mouse.y;
+	for (int i = 0; i < MAX_RECTANGLES; i++) {
+		if (rectangle[i].exist && rectangle[i].type == CLICK_ON) {
+			float d = (float)abs(-(long)rectangle[i].y + (long)(mx*mouse.click_y / my) - (long)mouse.click_x) / (float)sqrt(my*my / (mx*mx) + 1);
+			if (d <= 50.f) {
+				rectangle[i].type = CLICK_OFF;
 			}
 		}
 	}

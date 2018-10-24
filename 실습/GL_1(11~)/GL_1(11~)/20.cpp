@@ -104,6 +104,7 @@ GLvoid drawScene(GLvoid) {
 
 	glPushMatrix(); // arm_1 push
 	glTranslatef(arm_1.x, 0.f, 0.f);
+	glRotatef(arm_1.radian_y, 0.f, 1.f, 0.f);
 	glColor4f(1.f, 0.f, 0.f, 0.f);
 	arm_1.Draw(0.f);
 	
@@ -230,6 +231,14 @@ void Keyboard(unsigned char key, int x, int y) {
 
 	case 'm': case 'M':
 		if (arm_3.radian_y > -90.f)	arm_3.radian_y -= 3.f;
+		break;
+
+	case 'k': case 'K':
+		if (arm_1.radian_y < 90.f)	arm_1.radian_y += 3.f;
+		break;
+
+	case 'l': case 'L':
+		if (arm_1.radian_y > -90.f)	arm_1.radian_y -= 3.f;
 		break;
 	}
 	glutPostRedisplay();

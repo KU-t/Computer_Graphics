@@ -5,6 +5,7 @@
 #define W_x 800
 #define W_y 600
 #define W_z 600
+#define CLOUDS 100
 #define deg(x) x*3.141592/180
 
 enum VIEW { Perspective, Orthographic };
@@ -165,6 +166,19 @@ public:
 	}
 };
 
+class Cloud {
+public:
+	float radian;
+	float x, z;
+	float size = 0.1f;
+	bool exist = false;
+
+	void Draw() {
+		glScalef(size, size, size);
+		glutSolidRhombicDodecahedron();
+	}
+};
+
 Angle Angle_x, Angle_y, Angle_z;
 float move_x = 0, move_y = 0, move_z = 0;
 Circle circle;
@@ -185,8 +199,11 @@ ANIMATION running_machine_animation = increase;
 float running_machine_human_radian_x = 0.f;
 float running_machine_radian = 0.f;
 
+Cloud cloud[CLOUDS];
+
+
 float plane_radian = 0.f;
-float cloud_radian[5] = { -70.f,-60.f,-50.f,-40.f,-30.f };
+float plane_wings_radian = 0.f;
 
 void main(int argc, char **argv) {
 	srand((unsigned)time(NULL));
@@ -465,8 +482,13 @@ void Obj_animation() {
 
 	running_machine_radian += 3.f;
 	plane_radian += 3.f;
-	for (int i = 0; i < 5; i++) {
-		cloud_radian[i] += 3.f;
+	plane_wings_radian += 3.f;
+	for (int i = 0; i < CLOUDS; i++) {
+		if (cloud[i].exist) {
+			cloud[i].radian -= 3.f;
+			cloud[i].size -= 0.1f;
+			if (cloud[i].size <= 0.f)	cloud[i].exist = false;
+		}
 	}
 	circle.Update();
 	arm_1.Update();
@@ -751,104 +773,113 @@ void 	Draw_Runningmachine() {
 	glutSolidCube(1);
 	glPopMatrix(); // 바닥
 
-	for (float i = -1.f; i < 2.f; i += 2.f) {
-		for (float j = -1.f; j < 2.f; j += 2.f) {
-			glPushMatrix(); // 토러스
-			glColor4f(0.7f, 0.7f, 0.7f, 1.0f);
-			glTranslatef(i * 50.f, -7.f, j * 40.f);
-			glRotatef(running_machine_human_radian_x, 0.f, 0.f, 1.f);
-			glutSolidTorus(2.5f, 5.f, 10, 10);
-			glPopMatrix(); //토러스
-		}
-		glColor4f(0.1f, 0.1f, 0.4f, 1.0f);
-
-		glPushMatrix();
-		glTranslatef(i * 50.f, -7.f, 0.f);
-		glRotatef(running_machine_radian, 0.f, 0.f, 1.f);
-		for (float j = 0.f; j < 360.f; j += 45) {
-			float x = 7 * cos(deg(j));
-			float y = 7 * sin(deg(j));
-			glPushMatrix();
-			glTranslatef(x, y, 0.f);
-			glRotatef(j + 90.f, 0.f, 0.f, 1.f);
-			glScalef(5.f, 1.f, 80.f);
-			glutSolidCube(1);
-			glPopMatrix();
-		}
-		glPopMatrix();
+for (float i = -1.f; i < 2.f; i += 2.f) {
+	for (float j = -1.f; j < 2.f; j += 2.f) {
+		glPushMatrix(); // 토러스
+		glColor4f(0.7f, 0.7f, 0.7f, 1.0f);
+		glTranslatef(i * 50.f, -7.f, j * 40.f);
+		glRotatef(running_machine_human_radian_x, 0.f, 0.f, 1.f);
+		glutSolidTorus(2.5f, 5.f, 10, 10);
+		glPopMatrix(); //토러스
 	}
-	glPopMatrix();// 런닝머신
-
-	glPushMatrix(); // 사람
-	glTranslatef(-40.f, 115.f, 0.f);
-
-	glPushMatrix(); // 팔
-	glColor4f(1.f, 0.8f, 0.6f, 1.f);
-	glRotatef(-90.f, 0.f, 0.f, 1.f);
-	glRotatef(-180.f, 0.f, 1.f, 0.f);
-	for (float i = -30.f; i < 60.f; i += 60.f) {
-		glPushMatrix(); // 1
-		glTranslatef(-40.f, 15.f, i);
-		glRotatef(0.f, 0.1, 0.1, 0.1);
-		glScalef(10.f, 40.f, 10.f);
-		glutSolidCube(1);
-		glPopMatrix(); // 1
-	}
-	glPopMatrix(); // 팔
-
-
-	glPushMatrix(); // 1
-	glTranslatef(0.f, -20.f, 0.f);
-	glColor4f(0.f, 0.f, 0.f, 0.f);
-	glutSolidSphere(20.f, 10.f, 10.f);
-	glTranslatef(10.f, -5.f, 0.f);
-	glColor4f(1.f, 0.8f, 0.6f, 1.f);
-	glutSolidSphere(15.f, 10.f, 10.f);
-	for (float i = -5.f; i < 15.f; i += 10.f) {
-		glPushMatrix();
-		glTranslatef(13.f, -2.f, i);
-		glColor4f(0.f, 0.f, 0.f, 1.f);
-		glutSolidSphere(2.f, 10.f, 10.f);
-		glPopMatrix();
-	}
-	glPopMatrix(); // 1
+	glColor4f(0.1f, 0.1f, 0.4f, 1.0f);
 
 	glPushMatrix();
-	glTranslatef(0.f, -50.f, 0.f);
-	glScalef(15.f, 40.f, 50.f);
-	glColor4f(0.7f, 0.f, 0.f, 1.f);
-	glutSolidCube(1);
-	glPopMatrix();
-
-
-	glPushMatrix(); // 다리
-	for (float i = -1.f; i < 2.f; i += 2.f) {
-		glColor4f(0.f, 0.f, 0.7f, 1.f);
+	glTranslatef(i * 50.f, -7.f, 0.f);
+	glRotatef(running_machine_radian, 0.f, 0.f, 1.f);
+	for (float j = 0.f; j < 360.f; j += 45) {
+		float x = 7 * cos(deg(j));
+		float y = 7 * sin(deg(j));
 		glPushMatrix();
-		glTranslatef(0.f, -60.f, i * 15.f);
-		glRotatef(i * running_machine_human_radian_x, 0.f, 0.f, 1.f);
-		glPushMatrix();
-		glTranslatef(0.f, -20.f, 0.f);
-		glScalef(10.f, 40.f, 10.f);
+		glTranslatef(x, y, 0.f);
+		glRotatef(j + 90.f, 0.f, 0.f, 1.f);
+		glScalef(5.f, 1.f, 80.f);
 		glutSolidCube(1);
 		glPopMatrix();
-		glPopMatrix();
 	}
-	glPopMatrix(); // 다리
+	glPopMatrix();
+}
+glPopMatrix();// 런닝머신
 
-	glPopMatrix(); // 사람
+glPushMatrix(); // 사람
+glTranslatef(-40.f, 115.f, 0.f);
 
-	glPopMatrix(); // x_z 좌표이동
+glPushMatrix(); // 팔
+glColor4f(1.f, 0.8f, 0.6f, 1.f);
+glRotatef(-90.f, 0.f, 0.f, 1.f);
+glRotatef(-180.f, 0.f, 1.f, 0.f);
+for (float i = -30.f; i < 60.f; i += 60.f) {
+	glPushMatrix(); // 1
+	glTranslatef(-40.f, 15.f, i);
+	glRotatef(0.f, 0.1, 0.1, 0.1);
+	glScalef(10.f, 40.f, 10.f);
+	glutSolidCube(1);
+	glPopMatrix(); // 1
+}
+glPopMatrix(); // 팔
+
+
+glPushMatrix(); // 1
+glTranslatef(0.f, -20.f, 0.f);
+glColor4f(0.f, 0.f, 0.f, 0.f);
+glutSolidSphere(20.f, 10.f, 10.f);
+glTranslatef(10.f, -5.f, 0.f);
+glColor4f(1.f, 0.8f, 0.6f, 1.f);
+glutSolidSphere(15.f, 10.f, 10.f);
+for (float i = -5.f; i < 15.f; i += 10.f) {
+	glPushMatrix();
+	glTranslatef(13.f, -2.f, i);
+	glColor4f(0.f, 0.f, 0.f, 1.f);
+	glutSolidSphere(2.f, 10.f, 10.f);
+	glPopMatrix();
+}
+glPopMatrix(); // 1
+
+glPushMatrix();
+glTranslatef(0.f, -50.f, 0.f);
+glScalef(15.f, 40.f, 50.f);
+glColor4f(0.7f, 0.f, 0.f, 1.f);
+glutSolidCube(1);
+glPopMatrix();
+
+
+glPushMatrix(); // 다리
+for (float i = -1.f; i < 2.f; i += 2.f) {
+	glColor4f(0.f, 0.f, 0.7f, 1.f);
+	glPushMatrix();
+	glTranslatef(0.f, -60.f, i * 15.f);
+	glRotatef(i * running_machine_human_radian_x, 0.f, 0.f, 1.f);
+	glPushMatrix();
+	glTranslatef(0.f, -20.f, 0.f);
+	glScalef(10.f, 40.f, 10.f);
+	glutSolidCube(1);
+	glPopMatrix();
+	glPopMatrix();
+}
+glPopMatrix(); // 다리
+
+glPopMatrix(); // 사람
+
+glPopMatrix(); // x_z 좌표이동
 }
 
 void 	Draw_Plane() {
 	glPushMatrix();// x_z 좌표이동
-	glTranslatef(0.f,200.f,0.f);
+	glTranslatef(0.f, 200.f, 0.f);
 
 	glPushMatrix();// 비행기 동선
 	float x = 0, z = 0;
 	x = 100 * cos(deg(plane_radian));
 	z = 100 * sin(deg(plane_radian));
+	for (int i = 0; i < CLOUDS; i++) {
+		if (cloud[i].exist == false) {
+			cloud[i].exist = true;
+			cloud[i].x = x;
+			cloud[i].z = z;
+			cloud[i].size = 5.f;
+			break;
+		}
+	}
 	glTranslatef(x, 0, z);
 	glRotatef(-plane_radian, 0.f, 1.f, 0.f);
 	
@@ -863,6 +894,24 @@ void 	Draw_Plane() {
 	glScalef(1.f, 1.f, 2.f);
 	glColor4f(1.f, 1.f, 1.f,1.f);
 	glutSolidSphere(10,30,30);
+	glPopMatrix();
+
+	glPushMatrix();//프로펠러
+	glTranslatef(0.f, 0.f, 22.f);
+	glRotatef(plane_wings_radian, 0.f, 0.f, 1.f);
+	glColor4f(0.f, 0.f, 0.f, 1.f);
+
+	glPushMatrix();//프로펠러1
+	glScalef(1.f, 0.3f, 0.3f);
+	glutSolidCone(10, 10, 30, 30);
+	glPopMatrix();
+
+	glPushMatrix();//프로펠러2
+	glRotatef(90.f, 0.f, 0.f, 1.f);
+	glScalef(1.f, 0.3f, 0.3f);
+	glutSolidCone(10, 10, 30, 30);
+	glPopMatrix();
+
 	glPopMatrix();
 
 	glPushMatrix();//꼬리
@@ -900,16 +949,16 @@ void 	Draw_Plane() {
 	glPopMatrix();// 비행기 동선
 
 	glColor4f(0.5f, 0.5f, 0.5f,1.f);
-	for (int i = 0; i < 5; i ++) {
-		glPushMatrix();// 구름 동선
-		float x = 0, z = 0;
-		x = 100 * cos(deg(cloud_radian[i]));
-		z = 100 * sin(deg(cloud_radian[i]));
-		glTranslatef(x, 0, z);
-		glRotatef(-plane_radian, 0.f, 1.f, 0.f);
-		glScalef((i+1)*2, (i + 1) * 2, (i + 1) * 2);
-		glutSolidRhombicDodecahedron();
-		glPopMatrix();// 구름 동선
+
+	for (int i = 0; i < CLOUDS; i ++) {
+		if (cloud[i].exist) {
+			glPushMatrix();// 구름 동선
+			glRotatef(25.f, 0.f, 1.f, 0.f);
+			glTranslatef(cloud[i].x, 0, cloud[i].z);
+			glRotatef(cloud[i].radian, 0.f, 1.f, 0.f);
+			cloud[i].Draw();
+			glPopMatrix();// 구름 동선
+		}
 	}
 
 	glPopMatrix();//x_z 좌표이동
