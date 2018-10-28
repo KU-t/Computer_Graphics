@@ -17,6 +17,7 @@ enum RECTANGLE_TYPE { CLICK_ON, CLICK_OFF };
 enum CLICK { ON, OFF, END, WAIT, PICK };
 enum TYPE{PARTS_1, PARTS_2};
 enum SHAPE { P1, P2 };
+enum CHOOSE { L, R };
 
 VIEW View = Perspective;
 float tri_y = 700.f, rec_x = 0.f, size = 50.f;
@@ -62,9 +63,11 @@ public:
 	float x;
 	bool exist = false;
 	TRIANGLE_TYPE type;
+	int cnt_animation = 0;
+	bool sw_animation = false;
 
 	void Draw() {
-		if (exist) {
+		if (exist && cnt_animation == 0) {
 			glBegin(GL_POLYGON);
 			glColor4f(1.f, 1.0f, 0.f, 1.f);
 			if (!(type == E))	glVertex3f(x + size, tri_y + size, -100.f);
@@ -72,6 +75,29 @@ public:
 			if (!(type == S))	glVertex3f(x - size, tri_y - size, -100.f);
 			if (!(type == N))	glVertex3f(x - size, tri_y + size, -100.f);
 			glEnd();
+		}
+	}
+
+	void animation() {
+		if (sw_animation) {
+
+			cnt_animation = (cnt_animation + 1) % ((int)(size / 3));
+
+			glPushMatrix();
+			glTranslatef(x, tri_y, 0.f);
+			for (int i = 0; i < 360; i += 60) {
+				glPushMatrix();
+				glRotated(i, 0, 0, 1);
+				glScalef(cnt_animation / 2, cnt_animation, cnt_animation / 3);
+				glutSolidCone(10, 10, 10, 10);
+				glPopMatrix();
+			}
+			glPopMatrix();
+
+			if (cnt_animation == 0) {
+				exist = false;
+				sw_animation = false;
+			}
 		}
 	}
 };
@@ -162,6 +188,7 @@ public:
 	float copy_radian;
 	float init_y, init_radian;
 	float go_x, go_y, go_radian;
+	int store_i, store_j;
 
 	CLICK click = WAIT;
 	TYPE type;
@@ -213,6 +240,9 @@ class Mouse_Click {
 public:
 	float x, y, click_x, click_y;
 	CLICK click = OFF;
+	CLICK move = OFF;
+	CHOOSE choose;
+	int count;
 };
 
 float move_x = 0, move_y = 0, move_z = 0;
@@ -295,6 +325,11 @@ GLvoid drawScene(GLvoid) {
 		rectangle[i].Draw();
 	}
 
+	for (int i = 0; i < MAX_TRIANGLES; i++) {
+		if (triangle[i].sw_animation == true) {
+			triangle[i].animation();
+		}
+	}
 
 	Draw_Mouse_Line();
 	
@@ -356,7 +391,7 @@ void Mouse(int button, int state, int x, int y) {
 	}
 
 	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
-		mouse.click = ON;
+		mouse.move = ON;
 
 		mouse.click_x = 2 * (x - 400);
 		mouse.click_y = -2 * (y - 400);
@@ -365,6 +400,7 @@ void Mouse(int button, int state, int x, int y) {
 		mouse.y = -2 * (y - 400);
 
 		for (int i = 0; i < MAX_CELL_AMOUNT; i++) {
+			
 			if (Lparts[i].click == OFF) {
 				if ((Lparts[i].x - size <= mouse.click_x) && (mouse.click_x <= Lparts[i].x + size)) {
 					if ((Lparts[i].y - size <= mouse.click_y) && (mouse.click_y <= Lparts[i].y + size)) {
@@ -372,21 +408,22 @@ void Mouse(int button, int state, int x, int y) {
 						if (Lparts[i].shape == P1) {
 							if (mouse.click_y - Lparts[i].y > (mouse.click_x - Lparts[i].x)) {
 								Lparts[i].click = ON;
+								mouse.choose = L;
+								mouse.count = i;
 							}
 						}
 
 						else if (Lparts[i].shape == P2) {
 							if (mouse.click_y - Lparts[i].y < -(mouse.click_x - Lparts[i].x)) {
 								Lparts[i].click = ON;
+								mouse.choose = L;
+								mouse.count = i;
 							}
 						}
 					}
 				}
-
 			}
-		}
-
-		for (int i = 0; i < MAX_CELL_AMOUNT; i++) {
+		
 			if (Rparts[i].click == OFF) {
 				if ((Rparts[i].x - size <= mouse.click_x) && (mouse.click_x <= Rparts[i].x + size)) {
 					if ((Rparts[i].y - size <= mouse.click_y) && (mouse.click_y <= Rparts[i].y + size)) {
@@ -394,12 +431,16 @@ void Mouse(int button, int state, int x, int y) {
 						if (Rparts[i].shape == PARTS_1) {
 							if (mouse.click_y - Rparts[i].y <  (mouse.click_x - Rparts[i].x)) {
 								Rparts[i].click = ON;
+								mouse.choose = R;
+								mouse.count = i;
 							}
 						}
 						
-						if (Rparts[i].shape == PARTS_2) {
+						else if (Rparts[i].shape == PARTS_2) {
 							if (mouse.click_y - Rparts[i].y > -(mouse.click_x - Rparts[i].x)) {
 								Rparts[i].click = ON;
+								mouse.choose = R;
+								mouse.count = i;
 							}
 						}
 					}
@@ -412,6 +453,41 @@ void Mouse(int button, int state, int x, int y) {
 		mouse.click = OFF;
 		CHECK_Mouse_Line();
 	}
+
+	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP) {
+		mouse.move = OFF;
+		
+		if ((700.f - size <= mouse.click_y)&& (mouse.click_y <= 700.f + size)) {
+			for (int i = 0; i < MAX_TRIANGLES; i++) {
+
+				if (triangle[i].exist == true) {
+					if ((triangle[i].x - size <= mouse.x) && (mouse.x <= triangle[i].x + size)) {
+						triangle[i].sw_animation = true;
+						if (mouse.choose == L) {
+							Lparts[mouse.count].click = WAIT;
+							Lcells[Lparts[mouse.count].store_i].exist[Lparts[mouse.count].store_j] = false;
+						}
+						else if (mouse.choose == R) {
+							Rparts[mouse.count].click = WAIT;
+							Rcells[Rparts[mouse.count].store_i].exist[Rparts[mouse.count].store_j] = false;
+						}
+					}
+				}
+			}
+		}
+
+		else {
+			if (mouse.choose == L) {
+				Lparts[mouse.count].click = OFF;
+				Lparts[mouse.count].vel = 0.f;
+			}
+			else if (mouse.choose == R) {
+				Rparts[mouse.count].click = OFF;
+				Rparts[mouse.count].vel = 0.f;
+			}
+		}
+	}
+
 	glutPostRedisplay();
 }
 
@@ -426,7 +502,17 @@ void Motion(int x, int y) {
 	mouse.x = 2 * (x - 400);
 	mouse.y = -2 * (y - 400);
 
-	
+	if (mouse.move == ON) {
+		
+		if (mouse.choose == L) {
+			Lparts[mouse.count].x = mouse.x;
+			Lparts[mouse.count].y = mouse.y;
+		}
+		else if (mouse.choose == R) {
+			Rparts[mouse.count].x = mouse.x;
+			Rparts[mouse.count].y = mouse.y;
+		}
+	}
 
 
 	glutPostRedisplay();
@@ -665,11 +751,15 @@ void CHECK_PARTS(int num, float l) {
 	for (int p = 0; p < MAX_CELL_AMOUNT; p++) {
 		if (Lparts[p].click == WAIT) {
 			Lparts[p].click = OFF;
+			Lparts[p].x = 0.f;
+			Lparts[p].vel = 5.f;
 			for (int j = 0; j < 6; j++) {
 				bool sw = false;
 				for (int i = MAX_CELL_NUM - 1; i >= 0; i--) {
 					if (Lcells[i].exist[j] == false) {
 						Lcells[i].exist[j] = true;
+						Lparts[p].store_i = i;
+						Lparts[p].store_j = j;
 						Lparts[p].radian = 180.f;
 						if (l < 0.f) {
 							Lparts[p].radian = 270.f;
@@ -694,12 +784,16 @@ void CHECK_PARTS(int num, float l) {
 	for (int p = 0; p < MAX_CELL_AMOUNT; p++) {
 		if (Rparts[p].click == WAIT) {
 			Rparts[p].click = OFF;
+			Rparts[p].x = 0.f;
+			Rparts[p].vel = 5.f;
 			for (int j = 0; j < 6; j++) {
 				bool sw = false;
 				for (int i = 0; i < MAX_CELL_NUM; i++) {
 					if (Rcells[i].exist[j] == false) {
 						Rcells[i].exist[j] = true;
-						
+						Rparts[p].store_i = i;
+						Rparts[p].store_j = j;
+						Rparts[p].radian = 0.f;
 						Rparts[p].type = PARTS_2;
 						if (l < 0.f) {
 							Rparts[p].radian = 90.f;
