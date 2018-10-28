@@ -1,17 +1,23 @@
 ﻿  소스.cpp
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(91): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(259): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(385): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(386): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(387): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(388): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(396): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(397): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(399): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(400): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(502): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(503): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(591): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(605): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(619): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(99): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(271): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(413): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(414): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(415): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(416): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(424): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(425): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(427): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(428): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(537): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(538): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(626): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(640): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(654): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(675): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(676): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(677): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(703): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(704): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\소스.cpp(705): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Project_1.vcxproj -> C:\Users\태균\Desktop\2018-2\Computer_graphics\Computer_Graphics\Projects\Project_1\Debug\Project_1.exe

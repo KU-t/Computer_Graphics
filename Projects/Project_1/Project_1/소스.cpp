@@ -62,19 +62,26 @@ class Triangles {
 public:
 	float x;
 	bool exist = false;
+	float radian = 0.f;
+	float R, G, B;
+
 	TRIANGLE_TYPE type;
 	int cnt_animation = 0;
 	bool sw_animation = false;
 
 	void Draw() {
 		if (exist && cnt_animation == 0) {
+			glPushMatrix();
+			glTranslatef(x, tri_y, -100.f);
+			glRotatef(radian, 0.f, 0.f, 1.f);
 			glBegin(GL_POLYGON);
-			glColor4f(1.f, 1.0f, 0.f, 1.f);
-			if (!(type == E))	glVertex3f(x + size, tri_y + size, -100.f);
-			if (!(type == W))	glVertex3f(x + size, tri_y - size, -100.f);
-			if (!(type == S))	glVertex3f(x - size, tri_y - size, -100.f);
-			if (!(type == N))	glVertex3f(x - size, tri_y + size, -100.f);
+			glColor4f(R, G, B, 1.f);
+			if (!(type == E))	glVertex3f( + size,  + size, -100.f);
+			if (!(type == W))	glVertex3f( + size,  - size, -100.f);
+			if (!(type == S))	glVertex3f( - size,  - size, -100.f);
+			if (!(type == N))	glVertex3f( - size,  + size, -100.f);
 			glEnd();
+			glPopMatrix();
 		}
 	}
 
@@ -84,6 +91,7 @@ public:
 			cnt_animation = (cnt_animation + 1) % ((int)(size / 3));
 
 			glPushMatrix();
+			glColor4f(R, G, B, 1.f);
 			glTranslatef(x, tri_y, 0.f);
 			for (int i = 0; i < 360; i += 60) {
 				glPushMatrix();
@@ -108,14 +116,17 @@ class Rectangles {
 public:
 	float y;
 	bool exist = false;
-	float del_color = 1.f;
+	float radian = 0.f;
+	float R, G, B;
 	RECTANGLE_TYPE type = CLICK_ON;
 
 	void Draw() {
 		if (exist) {
 			glBegin(GL_POLYGON);
-			if (type == CLICK_ON)	glColor4f(1.f, 1.0f, 0.f, 1.f);
-			if (type == CLICK_OFF)	glColor4f(1.f, 0.0f, 0.f, 1.f);
+			if (type == CLICK_ON)
+				glColor4f(R, G, B, 1.f);
+			if (type == CLICK_OFF)
+				glColor4f(R + 1.F, G, B, 1.f);
 			glVertex3f(rec_x + size, y + size, -100.f);
 			glVertex3f(rec_x + size, y - size, -100.f);
 			glVertex3f(rec_x - size, y - size, -100.f);
@@ -189,6 +200,7 @@ public:
 	float init_y, init_radian;
 	float go_x, go_y, go_radian;
 	int store_i, store_j;
+	float R, G, B;
 
 	CLICK click = WAIT;
 	TYPE type;
@@ -223,7 +235,7 @@ public:
 	void Draw() {
 		if ((click == OFF)||(click == END) || (click == PICK) || (click == ON)) {
 			glPushMatrix();
-			glColor4f(1.f, 1.f, 0.f, 1.f);
+			glColor4f(R, G, B, 1.f);
 			glTranslatef(x, y, 0.f);
 			glRotatef(radian, 0.f, 0.f, 1.f);
 			glBegin(GL_POLYGON);
@@ -258,6 +270,8 @@ Mouse_Click mouse;
 
 void main(int argc, char **argv) {
 	//init
+	srand((unsigned)time(NULL));
+	
 	for (int i = 0; i < MAX_CELL_NUM; i++) {
 		Lcells[i].x = -800.f +(( i * 2) + 1) * size;
 		for (int j = 0; j < 6; j++) {
@@ -269,6 +283,19 @@ void main(int argc, char **argv) {
 			Rcells[i].p[j].x = 0.f + size + (i + 1) * 2 * size;
 		}
 	}
+
+	/*for (int i =  0; i < MAX_TRIANGLES; i++) {
+		triangle[i].R = (rand() % 100 * 0.01);
+		triangle[i].G = (rand() % 100 * 0.01);
+		triangle[i].B = (rand() % 100 * 0.01);
+	}
+
+	for (int i = 0; i < MAX_RECTANGLES; i++) {
+		rectangle[i].R = (rand() % 100 * 0.01);
+		rectangle[i].G = (rand() % 100 * 0.01);
+		rectangle[i].B = (rand() % 100 * 0.01);
+	}*/
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); // 디스플레이 모드 설정
 	glutInitWindowPosition(100, 100);
@@ -312,9 +339,6 @@ GLvoid drawScene(GLvoid) {
 		Rcells[i].Draw();
 	}
 
-	for (int i = 0; i < MAX_TRIANGLES; i++) {
-		triangle[i].Draw();
-	}
 
 	for (int i = 0; i < MAX_CELL_AMOUNT; i++) {
 		Lparts[i].Draw();
@@ -323,6 +347,10 @@ GLvoid drawScene(GLvoid) {
 
 	for (int i = 0; i < MAX_RECTANGLES; i++) {
 		rectangle[i].Draw();
+	}
+
+	for (int i = 0; i < MAX_TRIANGLES; i++) {
+		triangle[i].Draw();
 	}
 
 	for (int i = 0; i < MAX_TRIANGLES; i++) {
@@ -463,13 +491,20 @@ void Mouse(int button, int state, int x, int y) {
 				if (triangle[i].exist == true) {
 					if ((triangle[i].x - size <= mouse.x) && (mouse.x <= triangle[i].x + size)) {
 						triangle[i].sw_animation = true;
+						
 						if (mouse.choose == L) {
 							Lparts[mouse.count].click = WAIT;
 							Lcells[Lparts[mouse.count].store_i].exist[Lparts[mouse.count].store_j] = false;
+							triangle[i].R += Lparts[mouse.count].R;
+							triangle[i].G += Lparts[mouse.count].G;
+							triangle[i].B += Lparts[mouse.count].B;
 						}
 						else if (mouse.choose == R) {
 							Rparts[mouse.count].click = WAIT;
 							Rcells[Rparts[mouse.count].store_i].exist[Rparts[mouse.count].store_j] = false;
+							triangle[i].R += Rparts[mouse.count].R;
+							triangle[i].G += Rparts[mouse.count].G;
+							triangle[i].B += Rparts[mouse.count].B;
 						}
 					}
 				}
@@ -637,14 +672,18 @@ void Check_Triangle() {
 				triangle[i].exist = true;
 				triangle[i].x = -800.f - size;
 				triangle[i].type = (TRIANGLE_TYPE)(rand() % 4);
+				triangle[i].R = (rand() % 100 * 0.01);
+				triangle[i].G = (rand() % 100 * 0.01);
+				triangle[i].B = (rand() % 100 * 0.01);
 				break;
 			}
 		}
 	}
 	for (int i = 0; i < MAX_TRIANGLES; i++) {
 		if (triangle[i].exist) {
-			//del - 화면 밖
 			triangle[i].x += 2;
+			triangle[i].radian += 3.f;
+			//del - 화면 밖
 			if (triangle[i].x >= 800.f + size) {
 				triangle[i].exist = false;
 			}
@@ -661,6 +700,9 @@ void Check_Rectangle() {
 				rectangle[i].exist = true;
 				rectangle[i].y = -800.f - size;
 				rectangle[i].type = CLICK_ON;
+				rectangle[i].R = (rand() % 100 * 0.01);
+				rectangle[i].G = (rand() % 100 * 0.01);
+				rectangle[i].B = (rand() % 100 * 0.01);
 				break;
 			}
 		}
@@ -753,6 +795,10 @@ void CHECK_PARTS(int num, float l) {
 			Lparts[p].click = OFF;
 			Lparts[p].x = 0.f;
 			Lparts[p].vel = 5.f;
+			Lparts[p].R = rectangle[num].R;
+			Lparts[p].G = rectangle[num].G;
+			Lparts[p].B = rectangle[num].B;
+
 			for (int j = 0; j < 6; j++) {
 				bool sw = false;
 				for (int i = MAX_CELL_NUM - 1; i >= 0; i--) {
@@ -786,6 +832,10 @@ void CHECK_PARTS(int num, float l) {
 			Rparts[p].click = OFF;
 			Rparts[p].x = 0.f;
 			Rparts[p].vel = 5.f;
+			Rparts[p].R = rectangle[num].R;
+			Rparts[p].G = rectangle[num].G;
+			Rparts[p].B = rectangle[num].B;
+
 			for (int j = 0; j < 6; j++) {
 				bool sw = false;
 				for (int i = 0; i < MAX_CELL_NUM; i++) {
