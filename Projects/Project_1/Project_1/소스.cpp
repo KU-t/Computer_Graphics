@@ -75,11 +75,11 @@ public:
 			glTranslatef(x, tri_y, -100.f);
 			glRotatef(radian, 0.f, 0.f, 1.f);
 			glBegin(GL_POLYGON);
-			glColor4f(R, G, B, 1.f);
-			if (!(type == E))	glVertex3f( + size,  + size, -100.f);
-			if (!(type == W))	glVertex3f( + size,  - size, -100.f);
-			if (!(type == S))	glVertex3f( - size,  - size, -100.f);
-			if (!(type == N))	glVertex3f( - size,  + size, -100.f);
+			glColor4f(R, G, B, 0.f);
+			if (!(type == E))	glVertex3f( + size,  + size, 0.f);
+			if (!(type == W))	glVertex3f( + size,  - size, 0.f);
+			if (!(type == S))	glVertex3f( - size,  - size, 0.f);
+			if (!(type == N))	glVertex3f( - size,  + size, 0.f);
 			glEnd();
 			glPopMatrix();
 		}
@@ -91,7 +91,7 @@ public:
 			cnt_animation = (cnt_animation + 1) % ((int)(size / 3));
 
 			glPushMatrix();
-			glColor4f(R, G, B, 1.f);
+			glColor4f(R, G, B, 0.f);
 			glTranslatef(x, tri_y, 0.f);
 			for (int i = 0; i < 360; i += 60) {
 				glPushMatrix();
@@ -118,15 +118,16 @@ public:
 	bool exist = false;
 	float radian = 0.f;
 	float R, G, B;
+	float cnt_animation = 1.f;
 	RECTANGLE_TYPE type = CLICK_ON;
 
 	void Draw() {
 		if (exist) {
 			glBegin(GL_POLYGON);
 			if (type == CLICK_ON)
-				glColor4f(R, G, B, 1.f);
+				glColor4f(R, G, B, 0.f);
 			if (type == CLICK_OFF)
-				glColor4f(R + 1.F, G, B, 1.f);
+				glColor4f(R * cnt_animation, G * cnt_animation, B * cnt_animation, 0.f);
 			glVertex3f(rec_x + size, y + size, -100.f);
 			glVertex3f(rec_x + size, y - size, -100.f);
 			glVertex3f(rec_x - size, y - size, -100.f);
@@ -151,7 +152,7 @@ public:
 
 	void Draw() {
 		// 셀마다의 대각선 가로선
-		glColor4f(0.7f, 0.7f, 0.f, 0.5f);
+		glColor4f(0.7f, 0.7f, 0.f, 0.f);
 		glBegin(GL_LINE_STRIP);
 		glVertex3f(x - size, y, 0.f);
 		glVertex3f(x + size, y + 2 * size, 0.f);
@@ -345,13 +346,15 @@ GLvoid drawScene(GLvoid) {
 		Rparts[i].Draw();
 	}
 
+	for (int i = 0; i < MAX_TRIANGLES; i++) {
+		triangle[i].Draw();
+	}
+
 	for (int i = 0; i < MAX_RECTANGLES; i++) {
 		rectangle[i].Draw();
 	}
 
-	for (int i = 0; i < MAX_TRIANGLES; i++) {
-		triangle[i].Draw();
-	}
+	
 
 	for (int i = 0; i < MAX_TRIANGLES; i++) {
 		if (triangle[i].sw_animation == true) {
@@ -371,7 +374,7 @@ GLvoid drawScene(GLvoid) {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(move_x, move_y + 300.f, move_z + 600.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
+	gluLookAt(move_x, move_y + 0.f, move_z + 600.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 
 
 	glRotatef(Angle_x.radian, 1.f, 0.f, 0.f);
@@ -717,9 +720,12 @@ void Check_Rectangle() {
 				}
 			}
 			else if (rectangle[i].type == CLICK_OFF) {
+				rectangle[i].cnt_animation -= 0.1f;
 				// del - 화면 밖
-				if (rectangle[i].y - size >= 800.f)
+				if (rectangle[i].y - size >= 800.f) {
 					rectangle[i].exist = false;
+					rectangle[i].cnt_animation = 1.f;
+				}
 			}
 		}
 	}
