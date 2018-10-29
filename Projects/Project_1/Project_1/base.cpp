@@ -364,12 +364,12 @@ void Motion(int x, int y) {
 	mouse.x = 2 * (x - 400);
 	mouse.y = -2 * (y - 400);
 
-	for (int i = 0; i < MAX_CELL_AMOUNT; i++) {
+	/*for (int i = 0; i < MAX_CELL_AMOUNT; i++) {
 		if (Lparts[i].click == OFF) {
 			glPushMatrix();
 
 		}
-	}
+	}*/
 
 	glutPostRedisplay();
 }
