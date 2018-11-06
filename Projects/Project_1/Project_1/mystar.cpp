@@ -16,7 +16,7 @@ enum VIEW { Perspective, Orthographic };
 enum TRIANGLE_TYPE { E, W, S, N };
 enum RECTANGLE_TYPE { CLICK_ON, CLICK_OFF };
 enum CLICK { ON, OFF, END, WAIT, PICK };
-enum TYPE{PARTS_1, PARTS_2};
+enum TYPE { PARTS_1, PARTS_2 };
 enum SHAPE { P1, P2 };
 enum CHOOSE { L, R };
 
@@ -38,7 +38,7 @@ void Draw_Coordinates();
 void Draw_bottom();
 void Check_Triangle();
 void Check_Rectangle();
-void 	Draw_Cell();
+void    Draw_Cell();
 void Draw_Mouse_Line();
 void CHECK_Mouse_Line();
 void CHECK_PARTS(int num, float l);
@@ -69,7 +69,7 @@ public:
 	float R, G, B;
 	float size;
 	bool exist = false;
-	
+
 	void update() {
 		if (count < 1000) {
 			x -= dx;
@@ -128,10 +128,10 @@ public:
 			glRotatef(radian, 0.f, 0.f, 1.f);
 			glBegin(GL_POLYGON);
 			glColor4f(R, G, B, 0.f);
-			if (!(type == E))	glVertex3f( + size,  + size, 0.f);
-			if (!(type == W))	glVertex3f( + size,  - size, 0.f);
-			if (!(type == S))	glVertex3f( - size,  - size, 0.f);
-			if (!(type == N))	glVertex3f( - size,  + size, 0.f);
+			if (!(type == E))   glVertex3f(+size, +size, 0.f);
+			if (!(type == W))   glVertex3f(+size, -size, 0.f);
+			if (!(type == S))   glVertex3f(-size, -size, 0.f);
+			if (!(type == N))   glVertex3f(-size, +size, 0.f);
 			glEnd();
 			glPopMatrix();
 		}
@@ -149,7 +149,7 @@ public:
 			cnt_animation -= 1;
 			tx -= dx;
 			ty -= dy;
-			if (cnt_animation == 10)	cnt_animation = 60;
+			if (cnt_animation == 10)   cnt_animation = 60;
 			if (cnt_animation == 60) {
 				exist = false;
 				sw_animation = false;
@@ -174,7 +174,7 @@ public:
 	}
 
 	void animation() {
-		
+
 
 		if (sw_animation) {
 
@@ -191,7 +191,7 @@ public:
 			}
 			glPopMatrix();
 
-			
+
 		}
 	}
 };
@@ -225,15 +225,15 @@ public:
 
 class LCell {
 public:
-	bool exist[6] = {false};
+	bool exist[6] = { false };
 	float x, y = -800.f;
-	Point p[6] = { 
+	Point p[6] = {
 		0.f,-800.f + size,
 		0.f,-800.f + size,
 		0.f,-800.f + 3 * size,
 		0.f,-800.f + 3 * size,
 		0.f,-800.f + 5 * size,
-		0.f,-800.f + 5 * size 
+		0.f,-800.f + 5 * size
 	};
 
 	void Draw() {
@@ -260,7 +260,7 @@ public:
 		0.f,-800.f + 3 * size,
 		0.f,-800.f + 3 * size,
 		0.f,-800.f + 5 * size,
-		0.f,-800.f + 5 * size 
+		0.f,-800.f + 5 * size
 	};
 
 	void Draw() {
@@ -298,7 +298,7 @@ public:
 			x += go_x;
 			y += go_y;
 			radian += go_radian;
-			if ((copy_y - 0.01f <= y) && (y <= copy_y + 0.01f))	click = PICK;
+			if ((copy_y - 0.01f <= y) && (y <= copy_y + 0.01f))   click = PICK;
 		}
 
 		else if (click == OFF) {
@@ -307,28 +307,28 @@ public:
 			//radian = (radian + 3.f);
 
 			if (y <= -800.f + 7 * size) {
-				go_x = ( copy_x - x) / GO_SLICE;
-				go_y = ( copy_y - y) / GO_SLICE;
-				go_radian = (copy_radian-radian) / GO_SLICE;
+				go_x = (copy_x - x) / GO_SLICE;
+				go_y = (copy_y - y) / GO_SLICE;
+				go_radian = (copy_radian - radian) / GO_SLICE;
 				click = END;
 			}
 
-			if (type == PARTS_1)	x -= 3.f;
-			else if (type == PARTS_2)	x += 3.f;
+			if (type == PARTS_1)   x -= 3.f;
+			else if (type == PARTS_2)   x += 3.f;
 		}
 
 	}
 
 	void Draw() {
-		if ((click == OFF)||(click == END) || (click == PICK) || (click == ON)) {
+		if ((click == OFF) || (click == END) || (click == PICK) || (click == ON)) {
 			glPushMatrix();
 			glColor4f(R, G, B, 1.f);
 			glTranslatef(x, y, 0.f);
 			glRotatef(radian, 0.f, 0.f, 1.f);
 			glBegin(GL_POLYGON);
-			glVertex3f( - size,  - size, 0.f);
-			glVertex3f( + size,  - size, 0.f);
-			glVertex3f( + size,  + size, 0.f);
+			glVertex3f(-size, -size, 0.f);
+			glVertex3f(+size, -size, 0.f);
+			glVertex3f(+size, +size, 0.f);
 			glEnd();
 			glPopMatrix();
 		}
@@ -358,9 +358,9 @@ Mouse_Click mouse;
 void main(int argc, char **argv) {
 	//init
 	srand((unsigned)time(NULL));
-	
+
 	for (int i = 0; i < MAX_CELL_NUM; i++) {
-		Lcells[i].x = -800.f +(( i * 2) + 1) * size;
+		Lcells[i].x = -800.f + ((i * 2) + 1) * size;
 		for (int j = 0; j < 6; j++) {
 			Lcells[i].p[j].x = -800.f + ((i * 2) + 1) * size;
 		}
@@ -372,15 +372,15 @@ void main(int argc, char **argv) {
 	}
 
 	/*for (int i =  0; i < MAX_TRIANGLES; i++) {
-		triangle[i].R = (rand() % 100 * 0.01);
-		triangle[i].G = (rand() % 100 * 0.01);
-		triangle[i].B = (rand() % 100 * 0.01);
+	triangle[i].R = (rand() % 100 * 0.01);
+	triangle[i].G = (rand() % 100 * 0.01);
+	triangle[i].B = (rand() % 100 * 0.01);
 	}
 
 	for (int i = 0; i < MAX_RECTANGLES; i++) {
-		rectangle[i].R = (rand() % 100 * 0.01);
-		rectangle[i].G = (rand() % 100 * 0.01);
-		rectangle[i].B = (rand() % 100 * 0.01);
+	rectangle[i].R = (rand() % 100 * 0.01);
+	rectangle[i].G = (rand() % 100 * 0.01);
+	rectangle[i].B = (rand() % 100 * 0.01);
 	}*/
 
 	glutInit(&argc, argv);
@@ -412,8 +412,8 @@ GLvoid drawScene(GLvoid) {
 
 	glBegin(GL_POINTS);
 	glColor4f(0.7f, 0.7f, 0.f, 1.f);
-	
-	
+
+
 	for (float i = -800.f; i < 800.f; i += 20.f) {
 		glVertex3f(i, 600.f, 0.f);
 	}
@@ -440,15 +440,15 @@ GLvoid drawScene(GLvoid) {
 		rectangle[i].Draw();
 	}
 
-	
+
 
 	for (int i = 0; i < MAX_TRIANGLES; i++) {
-			triangle[i].animation();
+		triangle[i].animation();
 	}
 
 	Draw_Mouse_Line();
-	
-	
+
+
 	glPushMatrix();
 
 	// 원근투영
@@ -475,7 +475,7 @@ GLvoid drawScene(GLvoid) {
 			stars[i].Draw();
 		}
 	}
-	
+
 
 	glPopMatrix();
 
@@ -494,19 +494,19 @@ void Mouse(int button, int state, int x, int y) {
 	glOrtho(-W_x, W_x, -W_y, W_y, -W_z, W_z);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
-	
+
+
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-		
-		
+
+
 		mouse.click = ON;
 		mouse.click_x = 2 * (x - 400);
 		mouse.click_y = -2 * (y - 400);
 		mouse.x = 2 * (x - 400);
 		mouse.y = -2 * (y - 400);
 
-		
+
 	}
 
 	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
@@ -519,16 +519,17 @@ void Mouse(int button, int state, int x, int y) {
 		mouse.y = -2 * (y - 400);
 
 		for (int i = 0; i < MAX_CELL_AMOUNT; i++) {
-			
-			if (Lparts[i].click == OFF ) {
+
+			if (Lparts[i].click == OFF) {
 				if ((Lparts[i].x - size <= mouse.click_x) && (mouse.click_x <= Lparts[i].x + size)) {
 					if ((Lparts[i].y - size <= mouse.click_y) && (mouse.click_y <= Lparts[i].y + size)) {
-						
+
 						if (Lparts[i].shape == P1) {
-							if (mouse.click_y - Lparts[i].y > (mouse.click_x - Lparts[i].x)) {
+							if (mouse.click_y - Lparts[i].y >(mouse.click_x - Lparts[i].x)) {
 								Lparts[i].click = ON;
 								mouse.choose = L;
 								mouse.count = i;
+								break;
 							}
 						}
 
@@ -537,29 +538,32 @@ void Mouse(int button, int state, int x, int y) {
 								Lparts[i].click = ON;
 								mouse.choose = L;
 								mouse.count = i;
+								break;
 							}
 						}
 					}
 				}
 			}
-		
-			if (Rparts[i].click == OFF) {
+
+			else if (Rparts[i].click == OFF) {
 				if ((Rparts[i].x - size <= mouse.click_x) && (mouse.click_x <= Rparts[i].x + size)) {
 					if ((Rparts[i].y - size <= mouse.click_y) && (mouse.click_y <= Rparts[i].y + size)) {
-						
+
 						if (Rparts[i].shape == PARTS_1) {
 							if (mouse.click_y - Rparts[i].y <  (mouse.click_x - Rparts[i].x)) {
 								Rparts[i].click = ON;
 								mouse.choose = R;
 								mouse.count = i;
+								break;
 							}
 						}
-						
+
 						else if (Rparts[i].shape == PARTS_2) {
 							if (mouse.click_y - Rparts[i].y > -(mouse.click_x - Rparts[i].x)) {
 								Rparts[i].click = ON;
 								mouse.choose = R;
 								mouse.count = i;
+								break;
 							}
 						}
 					}
@@ -575,14 +579,14 @@ void Mouse(int button, int state, int x, int y) {
 
 	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP) {
 		mouse.move = OFF;
-		
-		if ((700.f - size <= mouse.click_y)&& (mouse.click_y <= 700.f + size)) {
+
+		if ((700.f - size <= mouse.click_y) && (mouse.click_y <= 700.f + size)) {
 			for (int i = 0; i < MAX_TRIANGLES; i++) {
 
 				if (triangle[i].exist == true) {
 					if ((triangle[i].x - size <= mouse.x) && (mouse.x <= triangle[i].x + size)) {
 						triangle[i].sw_animation = true;
-						
+
 						if (mouse.choose == L) {
 							Lparts[mouse.count].click = WAIT;
 							Lcells[Lparts[mouse.count].store_i].exist[Lparts[mouse.count].store_j] = false;
@@ -629,7 +633,7 @@ void Motion(int x, int y) {
 	mouse.y = -2 * (y - 400);
 
 	if (mouse.move == ON) {
-		
+
 		if (mouse.choose == L) {
 			Lparts[mouse.count].x = mouse.x;
 			Lparts[mouse.count].y = mouse.y;
@@ -647,10 +651,10 @@ void Motion(int x, int y) {
 void Timer(int value) {
 	Change_Angle_xyz();
 	for (int i = 0; i < MAX_CELL_AMOUNT; i++) {
-		if (Lparts[i].click == OFF || Lparts[i].click == END) 
+		if (Lparts[i].click == OFF || Lparts[i].click == END)
 			Lparts[i].update();
-		
-		if (Rparts[i].click == OFF || Rparts[i].click == END) 
+
+		if (Rparts[i].click == OFF || Rparts[i].click == END)
 			Rparts[i].update();
 	}
 	for (int i = 0; i < MAX_STARS; i++) {
@@ -673,13 +677,13 @@ void Timer(int value) {
 
 void Keyboard(unsigned char key, int x, int y) {
 	switch (key) {
-	case 'x':	case 'X':
+	case 'x':   case 'X':
 		Angle_x.sw = (Angle_x.sw + 1) % 2;
 		break;
-	case 'y':	case 'Y':
+	case 'y':   case 'Y':
 		Angle_y.sw = (Angle_y.sw + 1) % 2;
 		break;
-	case 'z':	case 'Z':
+	case 'z':   case 'Z':
 		Angle_z.sw = (Angle_z.sw + 1) % 2;
 		break;
 
@@ -856,14 +860,14 @@ void Check_Rectangle() {
 	rec_Count = (rec_Count + 1) % 25;
 }
 
-void 	Draw_Cell() {
+void    Draw_Cell() {
 	glColor4f(0.7f, 0.7f, 0.f, 0.5f);
-	
+
 	glBegin(GL_LINES);
 	// Cell 맨위에 선
 	glVertex3f(-800.f, -800.f + 3 * 2 * size, 0.f);
 	glVertex3f(800.f, -800.f + 3 * 2 * size, 0.f);
-	
+
 	//Cell마다 가로줄
 	for (float j = 0.f; j < 8.f; j++) {
 		glVertex3f(-800.f + j * 2 * size, -800.f, 0.f);
@@ -911,7 +915,7 @@ void CHECK_Mouse_Line() {
 					float d = (-(float)rectangle[i].y + (float)(mouse.y) - (float)(l*mouse.x)) / (float)sqrt((l*l) + 1);
 					if (-10.f <= d && d <= 10.f) {
 						rectangle[i].exist = false; // exist로
-						CHECK_PARTS(i,l);
+						CHECK_PARTS(i, l);
 					}
 				}
 			}
@@ -941,19 +945,19 @@ void CHECK_PARTS(int num, float l) {
 							Lparts[p].radian = 270.f;
 							Lparts[p].shape = P2;
 						}
-						Lparts[p].copy_x = Lcells[i].p[j].x+2.f;
+						Lparts[p].copy_x = Lcells[i].p[j].x + 2.f;
 						Lparts[p].copy_y = Lcells[i].p[j].y;
 						Lparts[p].y = rectangle[num].y;
 						Lparts[p].type = PARTS_1;
-						if (j % 2 == 1)	Lparts[p].copy_radian = 180.f;
+						if (j % 2 == 1)   Lparts[p].copy_radian = 180.f;
 						sw = true;
 						break;
 					}
-					if (sw)	break;
+					if (sw)   break;
 				}
-				if (sw)	break;
+				if (sw)   break;
 			}
-		break;
+			break;
 		}
 	}
 
@@ -982,14 +986,14 @@ void CHECK_PARTS(int num, float l) {
 						Rparts[p].copy_x = Rcells[i].p[j].x - 4.f;
 						Rparts[p].copy_y = Rcells[i].p[j].y;
 						Rparts[p].y = rectangle[num].y;
-						if (j % 2 == 1)	Rparts[p].copy_radian = 180.f;
+						if (j % 2 == 1)   Rparts[p].copy_radian = 180.f;
 						Rparts[p].copy_radian -= 90.f;
 						sw = true;
 						break;
 					}
-					if (sw)	break;
+					if (sw)   break;
 				}
-				if (sw)	break;
+				if (sw)   break;
 			}
 			break;
 		}
