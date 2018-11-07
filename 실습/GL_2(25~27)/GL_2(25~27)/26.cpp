@@ -326,7 +326,7 @@ void Reshape(int w = WIDTH, int h = HEIGHT)
 
 void TimerFunction(int value)
 {
-	glutTimerFunc(15, TimerFunction, 1);
+	glutTimerFunc(15, TimerFunction, 1); 
 
 	glutPostRedisplay();
 }
