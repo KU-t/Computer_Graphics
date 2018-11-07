@@ -17,10 +17,11 @@ void Mouse(int button, int state, int x, int y);
 class Vertex
 {
 private:
-	float mx, my;
 public:
+	float mx, my;
 	float get_mx() { return mx; }
 	float get_my() { return my; }
+	bool click = false;
 	void set_mouse(int x, int y)
 	{
 		mx = x;
@@ -63,6 +64,7 @@ void draw_curve(int start_vertex)
 }
 
 Vertex vert[20];
+bool sw = false;
 
 void main(int argc, char *argv[])
 {
@@ -112,6 +114,12 @@ void Reshape(int w = WIDTH, int h = HEIGHT)
 void TimerFunction(int value)
 {
 	glutTimerFunc(15, TimerFunction, 1);
+	for (int i = 0; i < 20; i++) {
+		if (vert[i].click == true) {
+			sw = true;
+			break;
+		}
+	}
 
 	glutPostRedisplay();
 }
@@ -128,15 +136,41 @@ void Mouse(int button, int state, int x, int y)
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN
 		&& COUNT < MAX)
 	{
-		for (int i = COUNT; i < COUNT + 1; ++i)
-		{
-			ctrlpoints[i][0] = x;
-			ctrlpoints[i][1] = 600 - y;
+		
+		if (COUNT < 20) {
+			for (int i = COUNT; i < COUNT + 1; ++i)
+			{
+				ctrlpoints[i][0] = x;
+				ctrlpoints[i][1] = 600 - y;
+			}
+
+			vert[COUNT].set_mouse(x, y);
+			COUNT++;
 		}
 
-		vert[COUNT].set_mouse(x, y);
-		COUNT++;
-	}
+		
+		else {
+			if (sw == false) {
+				for (int i = 0; i < 20; i++) {
+					if ((x - 5 <= vert[i].mx) && (vert[i].mx <= x + 5) && (y - 5 <= vert[i].my) && (vert[i].my <= y + 5)) {
+						vert[i].click = true;
+						break;
+					}
+				}
+			}
 
+			else {
+				for (int i = 0; i < 20; i++) {
+					if (vert[i].click == true) {
+						vert[i].mx = x;
+						vert[i].my = y;
+						vert[i].click = false;
+						sw = false;
+					}
+				}
+			}
+		}
+
+	}
 	glutPostRedisplay();
 }

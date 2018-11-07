@@ -11,6 +11,8 @@ void Keyboard(unsigned char key, int x, int y);
 void Mouse(int button, int state, int x, int y);
 void Motion(int x, int y);
 
+float rotate_y = 0.f;
+
 class Object
 {
 private:
@@ -23,11 +25,11 @@ private:
 
 	int ball_dir[5] = { 0 };
 	int ball_count = 0;
-
 	bool left_rotate = false;
 	bool right_rotate = false;
 	bool dir[3][4] = { false };
 public:
+	int count = 0;
 	void set_mx(int x) { mx = x; }
 	void init_dir(int cube_type)
 	{
@@ -72,34 +74,38 @@ public:
 	}
 	void left_cube_move(int cube_type, int dir_type, float speed, float size)
 	{
-		if (left_rotate == true)
-		{
-			if (cube_x[cube_type] == 0 && cube_y[cube_type] == 0)
-			{
-				cube_x[cube_type] = 0, cube_y[cube_type] = 0;
-				init_dir(cube_type);
-				dir[dir_type][0] = true;
-			}
-			if (cube_x[cube_type] == 0 && cube_y[cube_type] == 90 - size)
-			{
-				init_dir(cube_type);
-				dir[dir_type][1] = true;
-			}
-			if (cube_x[cube_type] == 90 - size && cube_y[cube_type] == 90 - size)
-			{
-				init_dir(cube_type);
-				dir[dir_type][2] = true;
-			}
-			if (cube_x[cube_type] == 90 - size && cube_y[cube_type] == 0)
-			{
-				init_dir(cube_type);
-				dir[dir_type][3] = true;
-			}
+		count++;
+		if (count >= 500) {
 
-			if (dir[dir_type][0] == true) glTranslatef(cube_x[cube_type], cube_y[cube_type] += speed, 0);
-			if (dir[dir_type][1] == true) glTranslatef(cube_x[cube_type] += speed, cube_y[cube_type], 0);
-			if (dir[dir_type][2] == true) glTranslatef(cube_x[cube_type], cube_y[cube_type] -= speed, 0);
-			if (dir[dir_type][3] == true) glTranslatef(cube_x[cube_type] -= speed, cube_y[cube_type], 0);
+			if (left_rotate == true)
+			{
+				if (cube_x[cube_type] == 0 && cube_y[cube_type] == 0)
+				{
+					cube_x[cube_type] = 0, cube_y[cube_type] = 0;
+					init_dir(cube_type);
+					dir[dir_type][0] = true;
+				}
+				if (cube_x[cube_type] == 0 && cube_y[cube_type] == 90 - size)
+				{
+					init_dir(cube_type);
+					dir[dir_type][1] = true;
+				}
+				if (cube_x[cube_type] == 90 - size && cube_y[cube_type] == 90 - size)
+				{
+					init_dir(cube_type);
+					dir[dir_type][2] = true;
+				}
+				if (cube_x[cube_type] == 90 - size && cube_y[cube_type] == 0)
+				{
+					init_dir(cube_type);
+					dir[dir_type][3] = true;
+				}
+
+				if (dir[dir_type][0] == true) glTranslatef(cube_x[cube_type], cube_y[cube_type] += speed, 0);
+				if (dir[dir_type][1] == true) glTranslatef(cube_x[cube_type] += speed, cube_y[cube_type], 0);
+				if (dir[dir_type][2] == true) glTranslatef(cube_x[cube_type], cube_y[cube_type] -= speed, 0);
+				if (dir[dir_type][3] == true) glTranslatef(cube_x[cube_type] -= speed, cube_y[cube_type], 0);
+			}
 		}
 	}
 	void make_ball(int type, float speed)
@@ -149,6 +155,8 @@ public:
 			glRotatef(angle, 0, 0, -1);
 		}
 		// ¿ß
+		glPushMatrix();
+		glRotatef(rotate_y, 0.f, 1.f, 0.f);
 		glColor3f(0.5, 0.5, 0.5);
 		glBegin(GL_QUADS);
 		glVertex3i(50, 50, 50);
@@ -188,8 +196,10 @@ public:
 		glVertex3i(-50, -50, -50);
 		glVertex3i(-50, 50, -50);
 		glEnd();
+		glPopMatrix();
 		// ¿∞∏È√º ---------------------------------------------------------------------------------------
 		glPushMatrix();
+		glRotatef(rotate_y, 0.f, 1.f, 0.f);
 		right_cube_move(0, 0, 0.5, 0);
 		left_cube_move(0, 0, 0.5, 0);
 		glTranslatef(-45, -45, 0);
@@ -199,6 +209,7 @@ public:
 		glutWireCube(10.1);
 		glPopMatrix();
 		glPushMatrix();
+		glRotatef(rotate_y, 0.f, 1.f, 0.f);
 		right_cube_move(1, 1, 0.5, 10);
 		left_cube_move(1, 1, 0.5, 10);
 		glTranslatef(-40, -40, -15);
@@ -208,6 +219,7 @@ public:
 		glutWireCube(20.1);
 		glPopMatrix();
 		glPushMatrix();
+		glRotatef(rotate_y, 0.f, 1.f, 0.f);
 		right_cube_move(2, 2, 0.5, -5);
 		left_cube_move(2, 2, 0.5, -5);
 		glTranslatef(-47.5, -47.5, 7.5);
@@ -271,11 +283,29 @@ public:
 			right_rotate = false;
 			left_rotate = false;
 			mx = 300;
+			count = 0;
+			rotate_y = 0.f;
 			for (int i = 0; i < 3; i++)
 			{
 				cube_x[i] = 0;
 				cube_y[i] = 0;
 			}
+			break;
+		case ';':
+			for (int i = 0; i < 5; i++) {
+
+				ball_x[i] =  0;
+				ball_y[i] =  0;
+				ball_dir[i] =  0;
+			}
+
+			ball_count = 0;
+			break;
+		case '[':
+			rotate_y += 5.f;
+			break;
+		case ']':
+			rotate_y -= 5.f;
 			break;
 		}
 	}
@@ -305,9 +335,9 @@ void drawScene(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_CULL_FACE);
-
+	//glPushMatrix();
 	obj.draw();
-
+	//glPopMatrix();
 	glutSwapBuffers();
 }
 
