@@ -13,9 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\Object">
+      <UniqueIdentifier>{2e5df188-0f7c-41fd-9121-f5dcf82754dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Object">
+      <UniqueIdentifier>{e979dd7f-5b76-45ed-8535-56c07ff7e830}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ingame.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Pillar.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Ground.cpp">
@@ -23,10 +32,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ingame.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Ground.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Ingame.h">
+    <ClInclude Include="Pillar.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

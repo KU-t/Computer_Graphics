@@ -3,14 +3,18 @@
 VIEW view = Orthographic;
 SCENE scene = TOP_VIEW;
 Ground ground;
+Pillar *pillar[MAX_PILLAR];
 Angle Angle_x(90.f), Angle_y, Angle_z;
 float move_x = 0, move_y = 0, move_z = 0;
 
 void main(int argc, char **argv) {
+	//init_pillar
+	for (int i = 0; i < MAX_PILLAR; i++) pillar[i] = NULL;
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); // 디스플레이 모드 설정
 	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(WIDNOW_SIZE_X, WIDNOW_SIZE_Y);
+	glutInitWindowSize(WINDOW_SIZE_X, WINDOW_SIZE_Y);
 	glutCreateWindow("PICNIC_ROBOT");
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(Keyboard);
@@ -29,7 +33,7 @@ GLvoid drawScene(GLvoid) {
 
 	if (!view) {
 		glLoadIdentity();
-		gluLookAt(move_x, move_y, move_z + 1600.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
+		gluLookAt(move_x, move_y, move_z + 2400.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 	}
 
 
@@ -41,12 +45,7 @@ GLvoid drawScene(GLvoid) {
 	glRotatef(Angle_y.radian, 0.f, 1.f, 0.f);
 	glRotatef(Angle_z.radian, 0.f, 0.f, 1.f);
 
-	Draw_Coordinates();
-	ground.Draw();
-
-
-	glColor4f(1.f, 0.f, 0.f, 1.f);
-	glutWireTeapot(100);
+	Draw_Objects();
 
 	glPopMatrix();
 
@@ -60,7 +59,9 @@ GLvoid Reshape(int w, int h) {
 
 void Mouse(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-
+		if (scene == TOP_VIEW) {
+			Add_Pillar((float)(2 * (x - WINDOW_SIZE_X / 2)), (float)(2 * (y - WINDOW_SIZE_Y / 2)));
+		}
 	}
 	glutPostRedisplay();
 }
@@ -131,13 +132,9 @@ void Keyboard(unsigned char key, int x, int y) {
 
 	case 'p':	case 'P':
 		view = (VIEW)((view + 1) % 2);
-		Reshape(WIDNOW_SIZE_X, WIDNOW_SIZE_Y);
+		Reshape(WINDOW_SIZE_X, WINDOW_SIZE_Y);
 		break;
 	}
-	glutPostRedisplay();
-}
-
-void Draw() {
 	glutPostRedisplay();
 }
 
@@ -162,7 +159,7 @@ void Change_View(VIEW view) {
 		gluLookAt(0.f, 0.f, 600.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 	}
 	else if (view) {
-		glOrtho(-WIDNOW_SIZE_X, WIDNOW_SIZE_X, -WIDNOW_SIZE_Y, WIDNOW_SIZE_Y, -WIDNOW_SIZE_Z, WIDNOW_SIZE_Z);
+		glOrtho(-WINDOW_SIZE_X, WINDOW_SIZE_X, -WINDOW_SIZE_Y, WINDOW_SIZE_Y, -WINDOW_SIZE_Z, WINDOW_SIZE_Z);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
@@ -219,5 +216,31 @@ void Change_Scene(SCENE in_scene, float in_move_x, float in_move_y, float in_mov
 	move_z = in_move_z;
 	Angle_x.radian = in_Angle_x_radian;
 	view = in_view;
-	Reshape(WIDNOW_SIZE_X, WIDNOW_SIZE_Y);
+	Reshape(WINDOW_SIZE_X, WINDOW_SIZE_Y);
+}
+
+void Draw_Objects() {
+	Draw_Coordinates();
+	ground.Draw();
+	for (int i = 0; i < MAX_PILLAR; i++) {
+		if (pillar[i] != NULL)	pillar[i]->Draw();
+	}
+
+	glColor4f(1.f, 0.f, 0.f, 1.f);
+	glutWireTeapot(100);
+}
+
+void Add_Pillar(float x, float z) {
+	int index = Find_Pillar();
+
+	if (index < 0)	return;
+
+	pillar[index] = new Pillar(x, z);
+}
+
+int Find_Pillar() {
+	for (int i = 0; i < MAX_PILLAR; i++) {
+		if (pillar[i] == NULL) return i;
+	}
+	return -1;
 }
