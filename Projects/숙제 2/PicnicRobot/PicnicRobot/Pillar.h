@@ -5,8 +5,12 @@ class Pillar{
 public:
 	float x, y, z;
 	float circle_rad;
+	bool select_mouse = false;
+	bool top_view = false;
+
 	Pillar();
 	Pillar(float in_x, float in_z);
 	void Draw();
+	void Update();
 };
 

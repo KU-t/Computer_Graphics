@@ -6,6 +6,7 @@ Ground ground;
 Pillar *pillar[MAX_PILLAR];
 Angle Angle_x(90.f), Angle_y, Angle_z;
 float move_x = 0, move_y = 0, move_z = 0;
+float mx, my, mz;
 
 void main(int argc, char **argv) {
 	//init_pillar
@@ -60,19 +61,34 @@ GLvoid Reshape(int w, int h) {
 void Mouse(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		if (scene == TOP_VIEW) {
-			Add_Pillar((float)(2 * (x - WINDOW_SIZE_X / 2)), (float)(2 * (y - WINDOW_SIZE_Y / 2)));
+			Add_Pillar((float)(2 * (x - WINDOW_SIZE_X / 2)), (float)(2 * (y - WINDOW_SIZE_Z / 2)));
 		}
 	}
 	glutPostRedisplay();
 }
 
 void Motion(int x, int y) {
-
+	if (scene == TOP_VIEW) {
+		mx = (float)(2 * (x - WINDOW_SIZE_X / 2));
+		mz = (float)(2 * (y - WINDOW_SIZE_Z / 2));
+	}
+	
 	glutPostRedisplay();
 }
 
 void Timer(int value) {
 	Change_Angle_xyz();
+	if (scene == TOP_VIEW) {
+		for (int i = 0; i < MAX_PILLAR; i++) {
+			if (pillar[i]) pillar[i]->top_view = true;
+		}
+		Collision_Pillar(mx, mz);
+	}
+	else {
+		for (int i = 0; i < MAX_PILLAR; i++) {
+			if (pillar[i]) pillar[i]->top_view = false;
+		}
+	}
 	glutPostRedisplay();
 	glutTimerFunc(50, Timer, 1);
 }
@@ -219,15 +235,18 @@ void Change_Scene(SCENE in_scene, float in_move_x, float in_move_y, float in_mov
 	Reshape(WINDOW_SIZE_X, WINDOW_SIZE_Y);
 }
 
+bool Collision_CIrcles(float x1, float z1, float r1, float x2, float z2, float r2) {
+	if (((abs((int)x1 - (int)x2)) * (abs((int)x1 - (int)x2)) + (abs((int)z1 - (int)z2)) * (abs((int)z1 - (int)z2))) <= (int)(r1 + r2))
+		return true;
+	return false;
+}
+
 void Draw_Objects() {
 	Draw_Coordinates();
 	ground.Draw();
 	for (int i = 0; i < MAX_PILLAR; i++) {
-		if (pillar[i] != NULL)	pillar[i]->Draw();
+		if (pillar[i])	pillar[i]->Draw();
 	}
-
-	glColor4f(1.f, 0.f, 0.f, 1.f);
-	glutWireTeapot(100);
 }
 
 void Add_Pillar(float x, float z) {
@@ -243,4 +262,15 @@ int Find_Pillar() {
 		if (pillar[i] == NULL) return i;
 	}
 	return -1;
+}
+
+void Collision_Pillar(float x, float z) {
+	for (int i = 0; i < MAX_PILLAR; i++) {
+		if (pillar[i]) {
+			if (Collision_CIrcles(pillar[i]->x, pillar[i]->z, pillar[i]->circle_rad, x, z, 0))
+				pillar[i]->select_mouse = true;
+			else pillar[i]->select_mouse = false;
+		}
+	}
+
 }
