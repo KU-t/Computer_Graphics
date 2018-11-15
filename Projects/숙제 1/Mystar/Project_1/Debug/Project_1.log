@@ -1,0 +1,23 @@
+﻿  mystar.cpp
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(188): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(358): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(504): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(505): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(506): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(507): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(515): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(516): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(518): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(519): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(632): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(633): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(757): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(771): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(785): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(806): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(807): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(808): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(834): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(835): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\project_1\project_1\mystar.cpp(836): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Project_1.vcxproj -> C:\Users\태균\Desktop\2018-2\Computer_graphics\Computer_Graphics\Projects\Project_1\Debug\Project_1.exe
