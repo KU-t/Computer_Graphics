@@ -23,6 +23,8 @@ void Change_View(VIEW view);
 void Draw_Coordinates();
 void Draw_bottom();
 void 	Draw_Lines();
+void Draw_line(int first_point);
+bool Collision_circle(float px, float py, float mx, float my);
 
 class Angle {
 public:
@@ -53,6 +55,8 @@ public:
 Point *point[19];
 Angle Angle_x, Angle_y, Angle_z;
 float move_x = 0, move_y = 0, move_z = 0;
+int select_index;
+bool select_point = false;
 
 void main(int argc, char **argv) {
 	for (int i = 0; i < MAX_POINTS; i++) {
@@ -80,7 +84,7 @@ GLvoid drawScene(GLvoid) {
 
 	if (!View) {
 		glLoadIdentity();
-		gluLookAt(move_x, move_y, move_z + 600.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
+		gluLookAt(move_x, move_y, move_z + 300.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 	}
 
 
@@ -114,20 +118,42 @@ GLvoid Reshape(int w, int h) {
 
 void Mouse(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+		int mx = 2 * (x - 400);
+		int my = -2 * (y - 300);
+		
 		for (int i = 0; i < MAX_POINTS; i++) {
-			if (point[i] == NULL) {
-				point[i] = new Point;
-				point[i]->x = 2 * (x - 400);
-				point[i]->y = -2 * (y - 300);
-				break;
+			if (point[i]) {
+				if (Collision_circle(point[i]->x, point[i]->y, mx, my)) {
+					select_index = i;
+					select_point = true;
+				}
+			}
+		}
+
+		if (!(select_point)) {
+			for (int i = 0; i < MAX_POINTS; i++) {
+				if (point[i] == NULL) {
+					point[i] = new Point;
+					point[i]->x = mx;
+					point[i]->y = my;
+					break;
+				}
 			}
 		}
 	}
+
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) select_point = false;
 	glutPostRedisplay();
 }
 
 void Motion(int x, int y) {
-
+	if (select_point) {
+		int mx = 2 * (x - 400);
+		int my = -2 * (y - 300);
+		
+		point[select_index]->x = mx;
+		point[select_index]->y = my;
+	}
 	glutPostRedisplay();
 }
 
@@ -279,33 +305,40 @@ void Draw_bottom() {
 }
 
 void 	Draw_Lines() {
-	if (point[18]) {
+	if (point[18]) Draw_line(15);
+	if (point[15]) Draw_line(12);
+	if (point[12]) Draw_line(9);
+	if (point[9]) Draw_line(6);
+	if (point[6]) Draw_line(3);
+	if (point[3]) Draw_line(0);
 
-	}
+}
 
-	if (point[15]) {
+void Draw_line(int first_point) {
+	GLfloat ctrlpoints[4][3] ={
+		{ point[first_point]->x,point[first_point]->y,0 },
+		{ point[first_point + 1]->x,point[first_point + 1]->y,0 },
+		{ point[first_point + 2]->x,point[first_point + 2]->y,0 },
+		{ point[first_point + 3]->x,point[first_point + 3]->y,0 }
+	};
+	glMap1f(GL_MAP1_VERTEX_3, 0.0, 1.0, 3, 4, &ctrlpoints[0][0]);
+	glEnable(GL_MAP1_VERTEX_3);
+	glMapGrid1f(100.0, 0.0, 1.0); 
+	glEvalMesh1 (GL_LINE, 0, 100); 
 
-	}
-
-	if (point[12]) {
-
-	}
+	glDisable(GL_MAP1_VERTEX_3);
 	
-	if (point[9]) {
+	glPointSize (5.0); 
+	glColor4f (0.f, 0.f, 0.f, 1.f); 
+	glBegin(GL_POINTS); 
+	for (int i = 0; i < 4; i++ ) 
+		glVertex3fv (&ctrlpoints[i][0]); 
+	glEnd ();
+}
 
+bool Collision_circle(float px, float py, float mx, float my) {
+	if (((px - mx) * (px - mx) + (py - my) * (py - my)) <= (POINTS_SIZE * POINTS_SIZE)) {
+		return true;
 	}
-
-	if (point[6]) {
-
-	}
-
-	if (point[3]) {
-		int i = 0;
-		GLfloat ctrlpoints[4][3] = {
-			{point[i]->x,point[i]->y,0},
-			{ point[i + 1]->x,point[i + 1]->y,0 },
-			{ point[i + 2]->x,point[i + 2]->y,0 },
-			{ point[i + 3]->x,point[i + 3]->y,0 },
-		};
-	}
+	return false;
 }

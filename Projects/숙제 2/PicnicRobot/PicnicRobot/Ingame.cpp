@@ -71,6 +71,9 @@ void Motion(int x, int y) {
 	if (scene == TOP_VIEW) {
 		mx = (float)(2 * (x - WINDOW_SIZE_X / 2));
 		mz = (float)(2 * (y - WINDOW_SIZE_Z / 2));
+		for (int i = 0; i < MAX_PILLAR; i++) {
+			Collision_Pillar(mx, mz);
+		}
 	}
 	
 	glutPostRedisplay();
@@ -82,7 +85,7 @@ void Timer(int value) {
 		for (int i = 0; i < MAX_PILLAR; i++) {
 			if (pillar[i]) pillar[i]->top_view = true;
 		}
-		Collision_Pillar(mx, mz);
+		//Collision_Pillar(mx, mz);
 	}
 	else {
 		for (int i = 0; i < MAX_PILLAR; i++) {
@@ -236,7 +239,7 @@ void Change_Scene(SCENE in_scene, float in_move_x, float in_move_y, float in_mov
 }
 
 bool Collision_CIrcles(float x1, float z1, float r1, float x2, float z2, float r2) {
-	if (((abs((int)x1 - (int)x2)) * (abs((int)x1 - (int)x2)) + (abs((int)z1 - (int)z2)) * (abs((int)z1 - (int)z2))) <= (int)(r1 + r2))
+	if (		(int)(x1 - x2) * (int)(x1 - x2) + (int)(z1 - z2) * (int)(z1 - z2) <= (int)(r1 + r2) * (int)(r1 + r2)		)
 		return true;
 	return false;
 }
