@@ -1,14 +1,17 @@
 #include <gl/freeglut.h>
 #include <math.h>
+#include <time.h>
 
 #define W_x 800
 #define W_y 600
 #define W_z 600
 #define POINTS_SIZE 10
-#define MAX_POINTS 19
+#define MAX_POINTS 18
 #define deg(x) 3.141592*x/180
+#define WAVE_HEGHT 100
 
 enum VIEW { Perspective, Orthographic };
+enum TYPE { UP = -1, DOWN = 1};
 
 VIEW View = Orthographic;
 
@@ -23,7 +26,7 @@ void Change_View(VIEW view);
 void Draw_Coordinates();
 void Draw_bottom();
 void 	Draw_Lines();
-void Draw_line(int first_point);
+void Draw_line(int first_point, TYPE type);
 bool Collision_circle(float px, float py, float mx, float my);
 
 class Angle {
@@ -39,30 +42,33 @@ public:
 
 class Point {
 public:
-	float x, y;
+	float x, y, z = 0;
+	float radian = 0.f;
 	float exist = false;
 
 	void Draw() {
-		float px, py;
 		glColor4f(0.f, 0.f, 0.f, 1.f);
 		glPushMatrix();
-		glTranslatef(x, y, 0.f);
+		glTranslatef(x, y, z);
 		glColor4f(0.f, 0.f, 1.f, 1.f);
 		glutSolidSphere(POINTS_SIZE, 10.f, 10.f);
 		glPopMatrix();
 	}
 };
 
-Point *point[19];
+Point *point[MAX_POINTS];
 Angle Angle_x, Angle_y, Angle_z;
+TYPE type = UP;
+float z[3];
+float z_radian = 0.f;
 float move_x = 0, move_y = 0, move_z = 0;
 int select_index;
 bool select_point = false;
 
 void main(int argc, char **argv) {
-	for (int i = 0; i < MAX_POINTS; i++) {
-		point[i] = NULL;
-	}
+	srand((unsigned)time(NULL));
+	for (int i = 0; i < MAX_POINTS; i++)	point[i] = NULL;
+	for (int i = 0; i < 3; i++)	z[i] = rand() % 200 - 100.f;
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); // 디스플레이 모드 설정
 	glutInitWindowPosition(100, 100);
@@ -85,7 +91,7 @@ GLvoid drawScene(GLvoid) {
 
 	if (!View) {
 		glLoadIdentity();
-		gluLookAt(move_x, move_y, move_z + 300.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
+		gluLookAt(move_x, move_y, move_z + 900.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 	}
 
 
@@ -161,6 +167,17 @@ void Motion(int x, int y) {
 void Timer(int value) {
 	Change_Angle_xyz();
 	glutPostRedisplay();
+	for (int i = 0; i < MAX_POINTS; i++) {
+		if (point[i]) {
+			point[i]->radian += 10.f;
+			if (point[i]->radian > 360.f)	point[i]->radian = 0.f;
+			point[i]->z = WAVE_HEGHT * sin(deg(point[i]->radian));
+		}
+	}
+	z_radian += 5.f;
+	for (int i = 0; i < 3; i++) {
+		z[i] += 10 * sin(deg(z_radian));
+	}
 	glutTimerFunc(50, Timer, 1);
 }
 
@@ -308,23 +325,30 @@ void Draw_bottom() {
 void 	Draw_Lines() {
 	glColor4f(1.f, 0.f, 0.f, 1.f);
 
-	if (point[18]) Draw_line(15);
-	if (point[15]) Draw_line(12);
-	if (point[12]) Draw_line(9);
-	if (point[9]) Draw_line(6);
-	if (point[6]) Draw_line(3);
-	if (point[3]) Draw_line(0);
-
+	for (int i = 3; i < MAX_POINTS; i += 2) {
+		if (point[i]) {
+			if (type == UP)	type = DOWN;
+			else if (type == DOWN)	type = UP;
+			Draw_line(i - 3, type);
+		}
+	}
 }
 
-void Draw_line(int first_point) {
+void Draw_line(int first_point, TYPE type) {
+	float p0x = point[first_point]->x, p0y = point[first_point]->y, p0z = point[first_point]->z;
+	float p1x = point[first_point + 1]->x, p1y = point[first_point + 1]->y, p1z = point[first_point + 1]->z;
+	float p2x = point[first_point + 2]->x, p2y = point[first_point + 2]->y, p2z = point[first_point + 2]->z;
+	float p3x = point[first_point + 3]->x, p3y = point[first_point + 3]->y, p3z = point[first_point + 3]->z;
+
 	GLfloat ctrlpoints[3][3][3] = {
-		{{ point[first_point]->x,point[first_point]->y,0 },{ (point[first_point]->x + point[first_point + 1]->x)/2, (point[first_point]->y + point[first_point + 1]->y) / 2,0 },{ point[first_point + 1]->x,point[first_point + 1]->y,0 }},
-		{{ (point[first_point]->x + point[first_point + 2]->x) / 2, (point[first_point]->y + point[first_point + 2]->y) / 2,0 },{ (((point[first_point]->x + point[first_point + 2]->x) / 2) + ((point[first_point]->x + point[first_point + 2]->x) / 2))/2, (((point[first_point]->y + point[first_point + 2]->y) / 2) + ((point[first_point]->y + point[first_point + 2]->y) / 2)) / 2,0 },{ (point[first_point]->x + point[first_point + 2]->x) / 2, (point[first_point]->y + point[first_point + 2]->y) / 2,0 }},
-		{{ point[first_point+2]->x,point[first_point+2]->y,0 },{ (point[first_point+2]->x + point[first_point + 3]->x) / 2, (point[first_point+2]->y + point[first_point + 3]->y) / 2,0 },{ point[first_point + 3]->x,point[first_point + 3]->y,0 }}
+		{ { p0x,p0y,p0z },{ (p0x + p1x) / 2,(p0y + p1y) / 2,(p0z + p1z) / 2 },{ p1x,p1y,p1z } },
+		{{ (p0x + p2x) / 2,(p0y + p2y) / 2, (z[0]) + (p0z + p2z) / 2 }, { ((p0x + p2x) / 2 + (p1x + p3x) / 2) / 2,((p0y + p2y) / 2 + (p1y + p3y) / 2) / 2, (z[1]) + ((p0z + p2z) / 2 + (p1z + p3z) / 2) / 2 }, { (p1x + p3x) / 2,(p1y + p3y) / 2, (z[2]) + (p1z + p3z) / 2 }},
+		{ { p2x,p2y,p2z },{ (p2x + p3x) / 2,(p2y + p3y) / 2,(p2z + p3z) / 2 },{ p3x,p3y,p3z } }
 	};
-	glMap2f(GL_MAP1_VERTEX_3, 0.0, 1.0, 3, 3, 0.0, 1.0, 9, 3, &ctrlpoints[0][0][0]);
-	glEnable(GL_MAP1_VERTEX_3);
+
+	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 3, 0.0, 1.0, 9, 3, &ctrlpoints[0][0][0]);
+	glEnable(GL_MAP2_VERTEX_3);
+
 	glMapGrid2f(10.0, 0.0, 1.0, 10.0, 0.f, 1.f);
 	glEvalMesh2(GL_LINE, 0, 10, 0, 10);
 
@@ -332,11 +356,12 @@ void Draw_line(int first_point) {
 
 	glPointSize(5.0);
 	
-	glBegin(GL_POINTS);
+	//제어점 그리기
+	/*glBegin(GL_POINTS);
 	for (int i = 0; i < 3; i++) 
 		for (int j = 0; j < 3; j++) 
 			glVertex3fv(ctrlpoints[i][j]);
-	glEnd();
+	glEnd();*/
 }
 
 bool Collision_circle(float px, float py, float mx, float my) {
