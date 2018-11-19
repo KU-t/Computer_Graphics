@@ -36,16 +36,16 @@ float move_x = 0, move_y = 0, move_z = 0;
 
 //GL_LIGHT0
 bool SWITCH_Light0 = false;
-GLfloat AmbientLight0[] = { 0.f, 1.f, 0.f, 1.f };
-GLfloat DiffuseLight0[] = { 1.0f, 0.0f, 0.0f, 1.0f }; // 광원 색
-GLfloat SpecularLight0[] = { 1.0, 1.0, 1.0, 1.0 }; // 백색조명
+GLfloat AmbientLight0[] = { 1.f, 0.f, 0.f, 1.f }; // 빛의 세기 + 빛의 색
+GLfloat DiffuseLight0[] = { 0.7f, 0.7f, 0.0f, 1.0f }; // 광원 색
+GLfloat SpecularLight0[] = { 1.0, 0.0, 0.0, 1.0 }; // 하이라이트 색
 GLfloat lightPos0[] = { 0.0, 0.0, 300.0, 1.0 }; // 위치: (10, 5, 20) 
 
-//GL_LIGHT1
+												//GL_LIGHT1
 bool SWITCH_Light1 = false;
-GLfloat AmbientLight1[] = { 1.f, 0.f, 0.f, 1.f };
-GLfloat DiffuseLight1[] = { 0.0f, 0.0f, 1.0f, 1.0f }; // 광원 색
-GLfloat SpecularLight1[] = { 1.0, 1.0, 1.0, 1.0 }; // 백색조명
+GLfloat AmbientLight1[] = { 0.f, 0.f, 1.f, 1.f }; // 빛의 세기 + 빛의색
+GLfloat DiffuseLight1[] = { 0.0f, 0.7f, 0.7f, 1.0f }; // 광원 색
+GLfloat SpecularLight1[] = { 0.0, 0.0, 1.0, 1.0 }; // 하이라이트색
 GLfloat lightPos1[] = { 0.0, 0.0, -300.0, 1.0 }; // 위치: (10, 5, 20) 
 
 void main(int argc, char **argv) {
@@ -54,12 +54,6 @@ void main(int argc, char **argv) {
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(WINDOW_SIZE_X, WINDOW_SIZE_Y);
 	glutCreateWindow(" - ");
-	
-	GLfloat ambientLight[] = { 1.f, 1.f, 1.f, 1.f };
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
-	glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 1.0);
-	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 0.0);
-
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(Keyboard);
 	glutMouseFunc(Mouse);
@@ -76,6 +70,11 @@ GLvoid drawScene(GLvoid) {
 	glEnable(GL_LIGHTING);
 	glEnable(GL_AUTO_NORMAL);
 
+	GLfloat ambientLight[] = { 0.1f, 0.1f, 0.1f, 1.f };
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+	glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 1.0);
+	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 0.0);
+
 	if (!View) {
 		glLoadIdentity();
 		gluLookAt(move_x, move_y, move_z + 600.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
@@ -90,35 +89,43 @@ GLvoid drawScene(GLvoid) {
 	glRotatef(Angle_z.radian, 0.f, 0.f, 1.f);
 
 	// LIGHT0
-	{	
-	glLightfv(GL_LIGHT0, GL_AMBIENT, AmbientLight0);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, DiffuseLight0);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, SpecularLight0);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
-	if(SWITCH_Light0)		glEnable(GL_LIGHT0);
-	else glDisable(GL_LIGHT0);
-	
+	{
+		glLightfv(GL_LIGHT0, GL_AMBIENT, AmbientLight0);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, DiffuseLight0);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, SpecularLight0);
+		glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+		if (SWITCH_Light0)		glEnable(GL_LIGHT0);
+		else glDisable(GL_LIGHT0);
+
 	}
-	
+
 	// LIGHT1
-	{	
-	glLightfv(GL_LIGHT1, GL_AMBIENT, AmbientLight1);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, DiffuseLight1);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, SpecularLight1);
-	glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
-	if(SWITCH_Light1)		glEnable(GL_LIGHT1);
-	else glDisable(GL_LIGHT1);
+	{
+		glLightfv(GL_LIGHT1, GL_AMBIENT, AmbientLight1);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, DiffuseLight1);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, SpecularLight1);
+		glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+		if (SWITCH_Light1)		glEnable(GL_LIGHT1);
+		else glDisable(GL_LIGHT1);
 
 	}
 
-	GLfloat green[] = { 0.f, 0.3f, 0.f, 1.f };
-	GLfloat specref[] = { 1.f, 0.f, 1.f, 1.f };
+	GLfloat solid[] = { 0.1f, 0.5f, 0.1f, 1.f };
+	GLfloat solid_specref[] = { 0.3f, 0.5f, 0.3f, 1.f };
 
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, green);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, specref);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, solid);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, solid_specref);
+	glMateriali(GL_FRONT, GL_SHININESS, 64);
+	glutSolidSphere(100.f, 100, 100);
+
+
+	GLfloat bottom[] = { 0.3f, 0.3f, 0.f, 1.f };
+	GLfloat bottom_specref[] = { 0.5f, 0.5f, 0.f, 1.f };
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, bottom);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, bottom_specref);
 	glMateriali(GL_FRONT, GL_SHININESS, 64);
 
-	glutSolidSphere(100.f, 100, 100);
+	Draw_bottom();
 
 	//빛 제거
 	glDisable(GL_LIGHT0);
@@ -131,7 +138,7 @@ GLvoid drawScene(GLvoid) {
 	glColor4f(1.f, 0.f, 0.f, 1.f);
 	glutSolidCone(20, 40, 10, 10);
 	glPopMatrix();
-	
+
 	//Draw_LIGHT1
 	glPushMatrix();
 	glTranslatef(0.f, 0.f, -300.f);
@@ -222,30 +229,30 @@ void Keyboard(unsigned char key, int x, int y) {
 		Reshape(800, 600);
 		break;
 
-	case '[':	
-		DiffuseLight0[0] -= 0.05f;
-		DiffuseLight1[2] -= 0.05f;
+	case '[':
+		for (int i = 0; i < 3; i++) {
+			DiffuseLight0[i] -= 0.05f;
+			DiffuseLight1[i] -= 0.05f;
+		}
 		break;
 	case']':
-		DiffuseLight0[0] += 0.05f;
-		DiffuseLight1[2] += 0.05f;
+		for (int i = 0; i < 3; i++) {
+			DiffuseLight0[i] += 0.05f;
+			DiffuseLight1[i] += 0.05f;
+		}
 		break;
 
-	case ',':		
-		SpecularLight0[0] -= 0.05f;
-		SpecularLight0[1] -= 0.05f;
-		SpecularLight0[2] -= 0.05f;
-		SpecularLight1[0] -= 0.05f;
-		SpecularLight1[1] -= 0.05f;
-		SpecularLight1[2] -= 0.05f;
+	case ',':
+		for (int i = 0; i < 3; i++) {
+			SpecularLight0[i] -= 0.05f;
+			SpecularLight1[i] -= 0.05f;
+		}
 		break;
 	case '.':
-		SpecularLight0[0] += 0.05f;
-		SpecularLight0[1] += 0.05f;
-		SpecularLight0[2] += 0.05f;
-		SpecularLight1[0] += 0.05f;
-		SpecularLight1[1] += 0.05f;
-		SpecularLight1[2] += 0.05f;
+		for (int i = 0; i < 3; i++) {
+			SpecularLight0[i] += 0.05f;
+			SpecularLight1[i] += 0.05f;
+		}
 		break;
 	}
 	glutPostRedisplay();
