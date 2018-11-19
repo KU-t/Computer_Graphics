@@ -3,6 +3,7 @@
 #define WINDOW_SIZE_X 800
 #define WINDOW_SIZE_Y 600
 #define WINDOW_SIZE_Z 600
+#define MAX_LIGHT 2
 
 enum VIEW { Perspective, Orthographic };
 
@@ -10,6 +11,7 @@ VIEW View = Perspective;
 
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
+
 void Mouse(int button, int state, int x, int y);
 void Motion(int x, int y);
 void Timer(int value);
@@ -29,9 +31,22 @@ public:
 		sw = false;
 	}
 };
-
 Angle Angle_x, Angle_y, Angle_z;
 float move_x = 0, move_y = 0, move_z = 0;
+
+//GL_LIGHT0
+bool SWITCH_Light0 = false;
+GLfloat AmbientLight0[] = { 0.f, 1.f, 0.f, 1.f };
+GLfloat DiffuseLight0[] = { 1.0f, 0.0f, 0.0f, 1.0f }; // 광원 색
+GLfloat SpecularLight0[] = { 1.0, 1.0, 1.0, 1.0 }; // 백색조명
+GLfloat lightPos0[] = { 0.0, 0.0, 300.0, 1.0 }; // 위치: (10, 5, 20) 
+
+//GL_LIGHT1
+bool SWITCH_Light1 = false;
+GLfloat AmbientLight1[] = { 1.f, 0.f, 0.f, 1.f };
+GLfloat DiffuseLight1[] = { 0.0f, 0.0f, 1.0f, 1.0f }; // 광원 색
+GLfloat SpecularLight1[] = { 1.0, 1.0, 1.0, 1.0 }; // 백색조명
+GLfloat lightPos1[] = { 0.0, 0.0, -300.0, 1.0 }; // 위치: (10, 5, 20) 
 
 void main(int argc, char **argv) {
 	glutInit(&argc, argv);
@@ -39,6 +54,12 @@ void main(int argc, char **argv) {
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(WINDOW_SIZE_X, WINDOW_SIZE_Y);
 	glutCreateWindow(" - ");
+	
+	GLfloat ambientLight[] = { 1.f, 1.f, 1.f, 1.f };
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+	glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 1.0);
+	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 0.0);
+
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(Keyboard);
 	glutMouseFunc(Mouse);
@@ -52,13 +73,13 @@ GLvoid drawScene(GLvoid) {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-
+	glEnable(GL_LIGHTING);
+	glEnable(GL_AUTO_NORMAL);
 
 	if (!View) {
 		glLoadIdentity();
 		gluLookAt(move_x, move_y, move_z + 600.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 	}
-
 
 	glPushMatrix();
 
@@ -68,11 +89,56 @@ GLvoid drawScene(GLvoid) {
 	glRotatef(Angle_y.radian, 0.f, 1.f, 0.f);
 	glRotatef(Angle_z.radian, 0.f, 0.f, 1.f);
 
-	Draw_Coordinates();
-	Draw_bottom();
+	// LIGHT0
+	{	
+	glLightfv(GL_LIGHT0, GL_AMBIENT, AmbientLight0);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, DiffuseLight0);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, SpecularLight0);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+	if(SWITCH_Light0)		glEnable(GL_LIGHT0);
+	else glDisable(GL_LIGHT0);
+	
+	}
+	
+	// LIGHT1
+	{	
+	glLightfv(GL_LIGHT1, GL_AMBIENT, AmbientLight1);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, DiffuseLight1);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, SpecularLight1);
+	glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+	if(SWITCH_Light1)		glEnable(GL_LIGHT1);
+	else glDisable(GL_LIGHT1);
 
+	}
+
+	GLfloat green[] = { 0.f, 0.3f, 0.f, 1.f };
+	GLfloat specref[] = { 1.f, 0.f, 1.f, 1.f };
+
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, green);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specref);
+	glMateriali(GL_FRONT, GL_SHININESS, 64);
+
+	glutSolidSphere(100.f, 100, 100);
+
+	//빛 제거
+	glDisable(GL_LIGHT0);
+	glDisable(GL_LIGHT1);
+	glDisable(GL_LIGHTING);
+
+	//Draw_LIGHT0 
+	glPushMatrix();
+	glTranslatef(0.f, 0.f, 300.f);
 	glColor4f(1.f, 0.f, 0.f, 1.f);
-	glutWireTeapot(100);
+	glutSolidCone(20, 40, 10, 10);
+	glPopMatrix();
+	
+	//Draw_LIGHT1
+	glPushMatrix();
+	glTranslatef(0.f, 0.f, -300.f);
+	glRotatef(180.f, 1.f, 0.f, 0.f);
+	glColor4f(0.f, 0.f, 1.f, 1.f);
+	glutSolidCone(20, 40, 10, 10);
+	glPopMatrix();
 
 	glPopMatrix();
 
@@ -104,6 +170,12 @@ void Timer(int value) {
 
 void Keyboard(unsigned char key, int x, int y) {
 	switch (key) {
+	case '1':
+		SWITCH_Light0 = (SWITCH_Light0 + 1) % 2;
+		break;
+	case '2':
+		SWITCH_Light1 = (SWITCH_Light1 + 1) % 2;
+		break;
 	case 'x':	case 'X':
 		Angle_x.sw = (Angle_x.sw + 1) % 2;
 		break;
@@ -148,6 +220,32 @@ void Keyboard(unsigned char key, int x, int y) {
 	case 'p':	case 'P':
 		View = (VIEW)((View + 1) % 2);
 		Reshape(800, 600);
+		break;
+
+	case '[':	
+		DiffuseLight0[0] -= 0.05f;
+		DiffuseLight1[2] -= 0.05f;
+		break;
+	case']':
+		DiffuseLight0[0] += 0.05f;
+		DiffuseLight1[2] += 0.05f;
+		break;
+
+	case ',':		
+		SpecularLight0[0] -= 0.05f;
+		SpecularLight0[1] -= 0.05f;
+		SpecularLight0[2] -= 0.05f;
+		SpecularLight1[0] -= 0.05f;
+		SpecularLight1[1] -= 0.05f;
+		SpecularLight1[2] -= 0.05f;
+		break;
+	case '.':
+		SpecularLight0[0] += 0.05f;
+		SpecularLight0[1] += 0.05f;
+		SpecularLight0[2] += 0.05f;
+		SpecularLight1[0] += 0.05f;
+		SpecularLight1[1] += 0.05f;
+		SpecularLight1[2] += 0.05f;
 		break;
 	}
 	glutPostRedisplay();
