@@ -323,7 +323,7 @@ void Draw_bottom() {
 }
 
 void 	Draw_Lines() {
-	glColor4f(1.f, 0.f, 0.f, 1.f);
+	glColor4f(0.3f, 0.3f, 1.f, 1.f);
 
 	for (int i = 3; i < MAX_POINTS; i += 2) {
 		if (point[i]) {
@@ -354,10 +354,9 @@ void Draw_line(int first_point, TYPE type) {
 
 	glDisable(GL_MAP1_VERTEX_3);
 
-	glPointSize(5.0);
-	
 	//제어점 그리기
-	/*glBegin(GL_POINTS);
+	/*glPointSize(5.0);
+	glBegin(GL_POINTS);
 	for (int i = 0; i < 3; i++) 
 		for (int j = 0; j < 3; j++) 
 			glVertex3fv(ctrlpoints[i][j]);
