@@ -10,8 +10,8 @@
 #define WINDOW_SIZE_Y 800
 #define WINDOW_SIZE_Z 800
 #define deg(x) 3.141592*x/180
-#define MAX_PILLAR 10
 
+#define MAX_PILLAR 10
 #define PILLAR_HEIGHT 50.f
 #define PILLAR_CIRCLE_RADIUS 30.f
 #define PILLAR_BUILD_ACCESS 100.f
@@ -33,6 +33,7 @@ void Change_Scene(SCENE in_scene, float in_move_x, float in_move_y, float in_mov
 void Add_Pillar(float x, float z);
 int Find_Pillar();
 void Collision_Pillar(float x, float z);
+bool Collision_Pillar(float px, float py, float mx, float my);
 
 class Angle {
 public:

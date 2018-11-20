@@ -1,0 +1,14 @@
+﻿  main.cpp
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\ice.h(7): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\ice.h(8): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\ice.h(9): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\flower.h(9): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\flower.h(10): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\flower.h(11): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\main.cpp(21): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\main.cpp(147): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\main.cpp(148): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\main.cpp(256): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\main.cpp(270): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\텀프 with 지수\컴그기말텀프\컴그기말텀프\main.cpp(284): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  컴그기말텀프.vcxproj -> C:\Users\태균\Desktop\2018-2\Computer_graphics\Computer_Graphics\Projects\텀프 with 지수\컴그기말텀프\Debug\컴그기말텀프.exe

@@ -8,6 +8,9 @@ Angle Angle_x(90.f), Angle_y, Angle_z;
 float move_x = 0, move_y = 0, move_z = 0;
 float mx, my, mz;
 
+int select_pillar_index;
+bool select_pillar = false;
+
 void main(int argc, char **argv) {
 	//init_pillar
 	for (int i = 0; i < MAX_PILLAR; i++) pillar[i] = NULL;
@@ -60,15 +63,39 @@ GLvoid Reshape(int w, int h) {
 
 void Mouse(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+
 		if (scene == TOP_VIEW) {
-			Add_Pillar((float)(2 * (x - WINDOW_SIZE_X / 2)), (float)(2 * (y - WINDOW_SIZE_Z / 2)));
+		mx = 2 * (x - WINDOW_SIZE_X / 2);
+		mz = 2 * (y - WINDOW_SIZE_Z / 2);
+			for (int i = 0; i < MAX_PILLAR; i++) {
+				if (pillar[i]) {
+					if (Collision_Pillar(pillar[i]->x, pillar[i]->z, mx, mz)) {
+						select_pillar_index = i;
+						select_pillar = true;
+					}
+				}
+			}
+
+		if(!(select_pillar))	Add_Pillar((float)(mx), (float)(mz));
 		}
 	}
+
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) select_pillar = false;
+
 	glutPostRedisplay();
 }
 
 void Motion(int x, int y) {
 	if (scene == TOP_VIEW) {
+	mx = (float)(2 * (x - WINDOW_SIZE_X / 2));
+	mz = (float)(2 * (y - WINDOW_SIZE_Z / 2));
+		if (select_pillar) {
+			pillar[select_pillar_index]->x = mx;
+			pillar[select_pillar_index]->z = mz;
+		}
+	}
+
+	if (scene == FRONT_VIEW) {
 		mx = (float)(2 * (x - WINDOW_SIZE_X / 2));
 		mz = (float)(2 * (y - WINDOW_SIZE_Z / 2));
 		for (int i = 0; i < MAX_PILLAR; i++) {
@@ -275,5 +302,11 @@ void Collision_Pillar(float x, float z) {
 			else pillar[i]->select_mouse = false;
 		}
 	}
+}
 
+bool Collision_Pillar(float px, float pz, float mx, float my) {
+	if (((px - mx) * (px - mx) + (pz - mz) * (pz - mz)) <= (PILLAR_CIRCLE_RADIUS * PILLAR_CIRCLE_RADIUS)) {
+		return true;
+	}
+	return false;
 }
