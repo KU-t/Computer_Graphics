@@ -21,7 +21,8 @@ void Pillar::Draw(){
 	else glColor4f(0.f, 0.f, 0.f, 1.f);
 	glutWireCylinder(circle_rad + 1, y, 30, 1);
 	if (top_view) {
-		glColor4f(1.f, 1.f, 0.f, 1.f);
+		if(top_view_draw_collision || click_mouse_collision)		glColor4f(1.f, 0.f, 0.f, 1.f);
+		else glColor4f(1.f, 1.f, 0.f, 1.f);
 		glutWireCylinder(circle_rad + PILLAR_BUILD_ACCESS, 2, 30, 1);
 	}
 	glPopMatrix();

@@ -10,6 +10,7 @@ float mx, my, mz;
 
 int select_pillar_index;
 bool select_pillar = false;
+int click_not_index = -1;
 
 void main(int argc, char **argv) {
 	//init_pillar
@@ -62,25 +63,50 @@ GLvoid Reshape(int w, int h) {
 }
 
 void Mouse(int button, int state, int x, int y) {
+	
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 
 		if (scene == TOP_VIEW) {
-		mx = 2 * (x - WINDOW_SIZE_X / 2);
-		mz = 2 * (y - WINDOW_SIZE_Z / 2);
+			mx = 2 * (x - WINDOW_SIZE_X / 2);
+			mz = 2 * (y - WINDOW_SIZE_Z / 2);
+
+			// 마우스-기둥 찾기
 			for (int i = 0; i < MAX_PILLAR; i++) {
 				if (pillar[i]) {
-					if (Collision_Pillar(pillar[i]->x, pillar[i]->z, mx, mz)) {
+					if (Collision_Pillar_mouse(pillar[i]->x, pillar[i]->z, mx, mz)) {
 						select_pillar_index = i;
+						pillar[select_pillar_index]->top_view = false;
 						select_pillar = true;
 					}
 				}
 			}
 
-		if(!(select_pillar))	Add_Pillar((float)(mx), (float)(mz));
+			// 기둥 생성
+			if (!(select_pillar)) {
+				for (int i = 0; i < MAX_PILLAR; i++) {
+					if (pillar[i]) {
+						if (Collision_New_Pillar(pillar[i]->x, pillar[i]->z, mx, mz)) {
+							if (Collision_Pillar_Pillar(pillar[i]->x, pillar[i]->z, mx, mz)) {
+								click_not_index = i;
+								pillar[click_not_index]->click_mouse_collision = true;
+								break;
+							}
+							else {
+								pillar[i]->click_mouse_collision = false;
+							}
+						}
+					}
+				}
+				if(Every_Pillar_Not_Click_Collision())	Add_Pillar((float)(mx), (float)(mz));
+			}
 		}
 	}
 
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) select_pillar = false;
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+		pillar[select_pillar_index]->top_view = true;
+		select_pillar = false;
+		if (click_not_index > -1)	pillar[click_not_index]->click_mouse_collision = false;
+	}
 
 	glutPostRedisplay();
 }
@@ -90,8 +116,17 @@ void Motion(int x, int y) {
 	mx = (float)(2 * (x - WINDOW_SIZE_X / 2));
 	mz = (float)(2 * (y - WINDOW_SIZE_Z / 2));
 		if (select_pillar) {
-			pillar[select_pillar_index]->x = mx;
-			pillar[select_pillar_index]->z = mz;
+			for (int i = 0; i < MAX_PILLAR; i++) {
+				if (i == select_pillar_index)	continue;
+				if (pillar[i]) {
+					if (Collision_Pillar_Pillar(pillar[i]->x, pillar[i]->z, mx, mz)) pillar[i]->top_view_draw_collision = true;
+					else	pillar[i]->top_view_draw_collision = false;
+				}
+			}
+			if (Every_Pillar_Not_Collision()) {
+				pillar[select_pillar_index]->x = mx;
+				pillar[select_pillar_index]->z = mz;
+			}
 		}
 	}
 
@@ -99,7 +134,7 @@ void Motion(int x, int y) {
 		mx = (float)(2 * (x - WINDOW_SIZE_X / 2));
 		mz = (float)(2 * (y - WINDOW_SIZE_Z / 2));
 		for (int i = 0; i < MAX_PILLAR; i++) {
-			Collision_Pillar(mx, mz);
+			//Collision_Pillar(mx, mz);
 		}
 	}
 	
@@ -110,10 +145,11 @@ void Timer(int value) {
 	Change_Angle_xyz();
 	if (scene == TOP_VIEW) {
 		for (int i = 0; i < MAX_PILLAR; i++) {
+			if (i == select_pillar_index) continue;
 			if (pillar[i]) pillar[i]->top_view = true;
 		}
-		//Collision_Pillar(mx, mz);
 	}
+
 	else {
 		for (int i = 0; i < MAX_PILLAR; i++) {
 			if (pillar[i]) pillar[i]->top_view = false;
@@ -294,19 +330,41 @@ int Find_Pillar() {
 	return -1;
 }
 
-void Collision_Pillar(float x, float z) {
-	for (int i = 0; i < MAX_PILLAR; i++) {
-		if (pillar[i]) {
-			if (Collision_CIrcles(pillar[i]->x, pillar[i]->z, pillar[i]->circle_rad, x, z, 0))
-				pillar[i]->select_mouse = true;
-			else pillar[i]->select_mouse = false;
-		}
-	}
-}
-
-bool Collision_Pillar(float px, float pz, float mx, float my) {
+bool Collision_Pillar_mouse(float px, float pz, float mx, float my) {
 	if (((px - mx) * (px - mx) + (pz - mz) * (pz - mz)) <= (PILLAR_CIRCLE_RADIUS * PILLAR_CIRCLE_RADIUS)) {
 		return true;
 	}
 	return false;
+}
+
+bool Collision_New_Pillar(float px, float pz, float mx, float my) {
+	if (((px - mx) * (px - mx) + (pz - mz) * (pz - mz)) <= ((PILLAR_CIRCLE_RADIUS + PILLAR_BUILD_ACCESS) * (PILLAR_CIRCLE_RADIUS + PILLAR_BUILD_ACCESS))) {
+		return true;
+	}
+	return false;
+}
+
+bool Collision_Pillar_Pillar(float px, float pz, float mx, float mz) {
+	if (((px - mx) * (px - mx) + (pz - mz) * (pz - mz)) <= ((PILLAR_CIRCLE_RADIUS * 2 + PILLAR_BUILD_ACCESS) * (PILLAR_CIRCLE_RADIUS * 2 + PILLAR_BUILD_ACCESS))) {
+		return true;
+	}
+	return false;
+}
+
+bool Every_Pillar_Not_Collision() {
+	for (int i = 0; i < MAX_PILLAR; i++) {
+		if (pillar[i]) {
+			if (pillar[i]->top_view_draw_collision)	return false;
+		}
+	}
+	return true;
+}
+
+bool Every_Pillar_Not_Click_Collision() {
+	for (int i = 0; i < MAX_PILLAR; i++) {
+		if (pillar[i]) {
+			if (pillar[i]->click_mouse_collision)	return false;
+		}
+	}
+	return true;
 }

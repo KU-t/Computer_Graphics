@@ -15,6 +15,7 @@
 #define PILLAR_HEIGHT 50.f
 #define PILLAR_CIRCLE_RADIUS 30.f
 #define PILLAR_BUILD_ACCESS 100.f
+
 enum VIEW { Perspective, Orthographic };
 enum SCENE { TOP_VIEW, FRONT_VIEW, PLAY_VIEW };
 
@@ -32,8 +33,11 @@ void Draw_Objects();
 void Change_Scene(SCENE in_scene, float in_move_x, float in_move_y, float in_move_z, float in_Angle_x_radian, VIEW in_view);
 void Add_Pillar(float x, float z);
 int Find_Pillar();
-void Collision_Pillar(float x, float z);
-bool Collision_Pillar(float px, float py, float mx, float my);
+bool Collision_Pillar_mouse(float px, float py, float mx, float my);
+bool Collision_New_Pillar(float px, float pz, float mx, float my);
+bool Collision_Pillar_Pillar(float p1_x, float p1_z, float p2_x, float p2_z);
+bool Every_Pillar_Not_Collision();
+bool Every_Pillar_Not_Click_Collision();
 
 class Angle {
 public:
