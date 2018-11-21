@@ -1,4 +1,5 @@
 #include <gl/freeglut.h>
+#include <math.h>
 
 #define WINDOW_SIZE_X 800
 #define WINDOW_SIZE_Y 600
@@ -7,7 +8,12 @@
 #define LIGHT_X 0
 #define LIGHT_Y 100
 #define LIGHT_Z 150
+#define deg(x) 3.141592*x/180
 #define MAX_SNOW 50
+#define BALL_LENGTH 100
+#define PYRAMID_WIDGHT 100
+#define PYRAMID_HEIGHT PYRAMID_WIDGHT * 1.73205080757
+
 enum VIEW { Perspective, Orthographic };
 
 VIEW View = Perspective;
@@ -23,6 +29,7 @@ void Change_Angle_xyz();
 void Change_View(VIEW view);
 void Draw_Coordinates();
 void Draw_bottom();
+void Draw_Pyramid();
 
 class Angle {
 public:
@@ -58,7 +65,8 @@ Snow *snow[MAX_SNOW];
 float move_x = 0, move_y = 0, move_z = 0;
 
 bool SWITCH_snowing = false;
-
+bool SWITCH_light_rad = false;
+bool SWITCH_normal_vector = false;
 float light_rad = 0.f;
 
 //GL_LIGHT0
@@ -79,6 +87,8 @@ GLfloat lightPos1[] = { LIGHT_X, LIGHT_Y, -LIGHT_Z, 1.0 }; // À§Ä¡: (10, 5, 20)
 GLfloat block_specref[] = { 0.1f, 0.1f, 0.1f, 1.f };
 
 float bolck_bright[50][50][4] = {};
+
+float ball_rad = 0.f;
 
 void main(int argc, char **argv) {
 	glutInit(&argc, argv);
@@ -162,13 +172,25 @@ GLvoid drawScene(GLvoid) {
 	//glEnable(GL_COLOR_MATERIAL);
 
 	glPushMatrix();
-	GLfloat Object0[] = { 0.1f, 0.5f, 0.1f, 1.f };
+	GLfloat Object[] = { 1.f, 1.f, 1.1f, 1.f };
+	GLfloat Object_specref[] = { 0.f, 0.5f, 0.5f, 1.f };
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Object);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, Object_specref);
+	glMateriali(GL_FRONT, GL_SHININESS, 64);
+	float x = BALL_LENGTH * cos(deg(ball_rad));
+	float z = BALL_LENGTH * sin(deg(ball_rad));
+	glTranslatef(x, 50, z);
+	glRotatef(-90.f, 1.f, 0.f, 0.f);
+	glutSolidSphere(50, 100, 100);
+	glPopMatrix();
+
+	glPushMatrix();
+	GLfloat Object0[] = { 1.f, 1.f, 1.f, 1.f };
 	GLfloat Object_specref0[] = { 0.3f, 0.5f, 0.3f, 1.f };
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Object0);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, Object_specref0);
 	glMateriali(GL_FRONT, GL_SHININESS, 64);
-	glRotatef(-90.f, 1.f, 0.f, 0.f);
-	glutSolidCone(50.f, 100, 100, 100);
+	Draw_Pyramid();
 	glPopMatrix();
 
 	glPushMatrix();
@@ -178,8 +200,7 @@ GLvoid drawScene(GLvoid) {
 	glMaterialfv(GL_FRONT, GL_SPECULAR, Object_specref1);
 	glMateriali(GL_FRONT, GL_SHININESS, 64);
 	glTranslatef(200.f, 0, 200.f);
-	glRotatef(-90.f, 1.f, 0.f, 0.f);
-	glutSolidCone(50.f, 100, 100, 100);
+	Draw_Pyramid();
 	glPopMatrix();
 
 	glPushMatrix();
@@ -189,8 +210,7 @@ GLvoid drawScene(GLvoid) {
 	glMaterialfv(GL_FRONT, GL_SPECULAR, Object_specref2);
 	glMateriali(GL_FRONT, GL_SHININESS, 64);
 	glTranslatef(200.f, 0, -200.f);
-	glRotatef(-90.f, 1.f, 0.f, 0.f);
-	glutSolidCone(50.f, 100, 100, 100);
+	Draw_Pyramid();
 	glPopMatrix();
 
 	glPushMatrix();
@@ -200,8 +220,7 @@ GLvoid drawScene(GLvoid) {
 	glMaterialfv(GL_FRONT, GL_SPECULAR, Object_specref3);
 	glMateriali(GL_FRONT, GL_SHININESS, 64);
 	glTranslatef(-200.f, 0, 200.f);
-	glRotatef(-90.f, 1.f, 0.f, 0.f);
-	glutSolidCone(50.f, 100, 100, 100);
+	Draw_Pyramid();
 	glPopMatrix();
 
 	glPushMatrix();
@@ -211,8 +230,7 @@ GLvoid drawScene(GLvoid) {
 	glMaterialfv(GL_FRONT, GL_SPECULAR, Object_specref4);
 	glMateriali(GL_FRONT, GL_SHININESS, 64);
 	glTranslatef(-200.f, 0, -200.f);
-	glRotatef(-90.f, 1.f, 0.f, 0.f);
-	glutSolidCone(50.f, 100, 100, 100);
+	Draw_Pyramid();
 	glPopMatrix();
 
 
@@ -279,7 +297,6 @@ void Motion(int x, int y) {
 void Timer(int value) {
 	Change_Angle_xyz();
 	glutPostRedisplay();
-	light_rad += 3.f;
 	if (SWITCH_snowing) {
 		for (int i = 0; i < MAX_SNOW; i++) {
 			if (snow[i] == NULL)	snow[i] = new Snow;
@@ -292,6 +309,8 @@ void Timer(int value) {
 			}
 		}
 	}
+	if (SWITCH_light_rad)	light_rad += 3.f;
+	ball_rad += 5.f;
 	glutTimerFunc(50, Timer, 1);
 }
 
@@ -387,8 +406,17 @@ void Keyboard(unsigned char key, int x, int y) {
 			SpecularLight1[i] += 0.05f;
 		}
 		break;
+
 	case 'c': case 'C':
+		SWITCH_light_rad = (SWITCH_light_rad + 1) % 2;
+		break;
+
+	case 'b': case 'B':
 		SWITCH_snowing = (SWITCH_snowing + 1) % 2;
+		break;
+
+	case 'v': case 'V':
+		SWITCH_normal_vector = (SWITCH_normal_vector + 1) % 2;
 		break;
 	}
 	glutPostRedisplay();
@@ -479,6 +507,7 @@ void Draw_bottom() {
 			glMateriali(GL_FRONT, GL_SHININESS, 64);
 			glTranslatef(-250.f + (10 * i), 0.f, -250.f + (10 * j));
 			glBegin(GL_QUADS);
+			glNormal3f(0.0, 0.0, 0.0);
 			glVertex4f(-10.f, 0.f, -10.f,1.f);
 			glVertex4f(10.f, 0.f, -10.f, 1.f);
 			glVertex4f(10.f, 0.f, 10.f, 1.f);
@@ -490,4 +519,20 @@ void Draw_bottom() {
 	}
 	
 	glPopMatrix();
+}
+
+void Draw_Pyramid() {
+	for (float i = 0.f; i < 360.f; i += 90.f) {
+		glPushMatrix();
+		glRotatef(i, 0.f, 1.f, 0.f);
+		glBegin(GL_TRIANGLES);
+		if (SWITCH_normal_vector)	glNormal3f(0.0, 1.0, 1.73205080757);
+		else glNormal3f(0.0, 0.0, 0.0);
+		glVertex3f(PYRAMID_WIDGHT / 2, 0.0, PYRAMID_WIDGHT / 2);
+		glVertex3f(-PYRAMID_WIDGHT / 2, 0.0, PYRAMID_WIDGHT / 2);
+		glVertex3f(0.0, PYRAMID_HEIGHT, 0.0);
+		glEnd();
+		glPopMatrix();
+
+	}
 }

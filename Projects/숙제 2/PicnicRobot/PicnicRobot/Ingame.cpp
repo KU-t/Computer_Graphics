@@ -167,6 +167,7 @@ void Keyboard(unsigned char key, int x, int y) {
 
 	case '2':
 		Change_Scene(FRONT_VIEW, 0.f, 0.f, 0.f, 0.f, Orthographic);
+		select_pillar_index = -1;
 		break;
 	case '3':
 		Change_Scene(PLAY_VIEW, 0.f, 0.f, 0.f, 0.f, Perspective);
