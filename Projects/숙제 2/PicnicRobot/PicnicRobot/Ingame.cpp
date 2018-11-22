@@ -103,7 +103,7 @@ void Mouse(int button, int state, int x, int y) {
 	}
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
-		pillar[select_pillar_index]->top_view = true;
+		if (pillar[select_pillar_index])		pillar[select_pillar_index]->top_view = true;
 		select_pillar = false;
 		if (click_not_index > -1)	pillar[click_not_index]->click_mouse_collision = false;
 	}
