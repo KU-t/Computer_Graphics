@@ -2,9 +2,11 @@
 
 #include <gl/freeglut.h>
 #include <math.h>
-
+#include <iostream>
 #include "Ground.h"
 #include "Pillar.h"
+
+using namespace std;
 
 #define WINDOW_SIZE_X 800
 #define WINDOW_SIZE_Y 800
@@ -33,7 +35,7 @@ void Draw_Objects();
 void Change_Scene(SCENE in_scene, float in_move_x, float in_move_y, float in_move_z, float in_Angle_x_radian, VIEW in_view);
 void Add_Pillar(float x, float z);
 int Find_Pillar();
-bool Collision_Pillar_mouse(float px, float py, float mx, float my);
+bool Collision_Pillar_mouse(SCENE scene, float px, float py, float mx, float my);
 bool Collision_New_Pillar(float px, float pz, float mx, float my);
 bool Collision_Pillar_Pillar(float p1_x, float p1_z, float p2_x, float p2_z);
 bool Every_Pillar_Not_Collision();

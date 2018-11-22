@@ -63,7 +63,7 @@ GLvoid Reshape(int w, int h) {
 }
 
 void Mouse(int button, int state, int x, int y) {
-	
+
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 
 		if (scene == TOP_VIEW) {
@@ -73,7 +73,7 @@ void Mouse(int button, int state, int x, int y) {
 			// 마우스-기둥 찾기
 			for (int i = 0; i < MAX_PILLAR; i++) {
 				if (pillar[i]) {
-					if (Collision_Pillar_mouse(pillar[i]->x, pillar[i]->z, mx, mz)) {
+					if (Collision_Pillar_mouse(TOP_VIEW, pillar[i]->x, pillar[i]->z, mx, mz)) {
 						select_pillar_index = i;
 						pillar[select_pillar_index]->top_view = false;
 						select_pillar = true;
@@ -97,15 +97,43 @@ void Mouse(int button, int state, int x, int y) {
 						}
 					}
 				}
-				if(Every_Pillar_Not_Click_Collision())	Add_Pillar((float)(mx), (float)(mz));
+				if (Every_Pillar_Not_Click_Collision())	Add_Pillar((float)(mx), (float)(mz));
 			}
+		}
+
+		if (scene == FRONT_VIEW) {
+			mx = 2 * (x - WINDOW_SIZE_X / 2);
+			my = -2 * (y - WINDOW_SIZE_Y / 2);
+			//cout << pillar[select_pillar]->y << "////" << my << endl;
+			for (int i = 0; i < MAX_PILLAR; i++) {
+				if (pillar[i]) {
+					if (Collision_Pillar_mouse(FRONT_VIEW, pillar[i]->x, pillar[i]->y, mx, my)) {
+						pillar[i]->select_front_view = true;
+						select_pillar_index = i;
+						select_pillar = true;
+						break;
+					}
+				}
+			}
+			cout << endl;
 		}
 	}
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
-		if (pillar[select_pillar_index])		pillar[select_pillar_index]->top_view = true;
+		if (scene == TOP_VIEW) {
+
+			if (pillar[select_pillar_index])		pillar[select_pillar_index]->top_view = true;
+			if (click_not_index > -1)	pillar[click_not_index]->click_mouse_collision = false;
+		}
+
+		else if (scene == FRONT_VIEW) {
+			if (-1 < select_pillar_index) {
+				if (pillar[select_pillar_index])
+					pillar[select_pillar_index]->select_front_view = false;
+			}
+			select_pillar_index = -1;
+		}
 		select_pillar = false;
-		if (click_not_index > -1)	pillar[click_not_index]->click_mouse_collision = false;
 	}
 
 	glutPostRedisplay();
@@ -113,8 +141,8 @@ void Mouse(int button, int state, int x, int y) {
 
 void Motion(int x, int y) {
 	if (scene == TOP_VIEW) {
-	mx = (float)(2 * (x - WINDOW_SIZE_X / 2));
-	mz = (float)(2 * (y - WINDOW_SIZE_Z / 2));
+		mx = (float)(2 * (x - WINDOW_SIZE_X / 2));
+		mz = (float)(2 * (y - WINDOW_SIZE_Z / 2));
 		if (select_pillar) {
 			for (int i = 0; i < MAX_PILLAR; i++) {
 				if (i == select_pillar_index)	continue;
@@ -131,10 +159,14 @@ void Motion(int x, int y) {
 	}
 
 	if (scene == FRONT_VIEW) {
-		mx = (float)(2 * (x - WINDOW_SIZE_X / 2));
-		mz = (float)(2 * (y - WINDOW_SIZE_Z / 2));
-		for (int i = 0; i < MAX_PILLAR; i++) {
-			//Collision_Pillar(mx, mz);
+		my = (float)(-2 * (y - WINDOW_SIZE_Y / 4));
+		if (select_pillar){
+			if (-1 < select_pillar_index) {
+				if (pillar[select_pillar_index]) {
+					if (-2 * (y - WINDOW_SIZE_Y / 4) > -750.f)
+						pillar[select_pillar_index]->y = my + WINDOW_SIZE_Y;
+				}
+			}
 		}
 	}
 	
@@ -163,11 +195,13 @@ void Keyboard(unsigned char key, int x, int y) {
 	switch (key) {
 	case '1':
 		Change_Scene(TOP_VIEW,0.f,0.f,0.f,90.f, Orthographic);
+		select_pillar = false;
 		break;
 
 	case '2':
 		Change_Scene(FRONT_VIEW, 0.f, 0.f, 0.f, 0.f, Orthographic);
 		select_pillar_index = -1;
+		select_pillar = false;
 		break;
 	case '3':
 		Change_Scene(PLAY_VIEW, 0.f, 0.f, 0.f, 0.f, Perspective);
@@ -331,14 +365,24 @@ int Find_Pillar() {
 	return -1;
 }
 
-bool Collision_Pillar_mouse(float px, float pz, float mx, float my) {
-	if (((px - mx) * (px - mx) + (pz - mz) * (pz - mz)) <= (PILLAR_CIRCLE_RADIUS * PILLAR_CIRCLE_RADIUS)) {
+bool Collision_Pillar_mouse(SCENE scene, float px, float pyz, float mx, float myz) {
+	if (scene == TOP_VIEW) {
+		if (((px - mx) * (px - mx) + (pyz - myz) * (pyz - myz)) <= (PILLAR_CIRCLE_RADIUS * PILLAR_CIRCLE_RADIUS)) {
+			return true;
+		}
+		return false;
+	}
+	if (scene == FRONT_VIEW) {
+		if (mx < px - PILLAR_CIRCLE_RADIUS)		return false;
+		if (px + PILLAR_CIRCLE_RADIUS < mx)	return false;
+		if (pyz < -WINDOW_SIZE_Y/2)	return false;
+		if ((-WINDOW_SIZE_Y / 2) + (pyz * 2) < myz)	return false;
+
 		return true;
 	}
-	return false;
 }
 
-bool Collision_New_Pillar(float px, float pz, float mx, float my) {
+bool Collision_New_Pillar(float px, float pz, float mx, float mz) {
 	if (((px - mx) * (px - mx) + (pz - mz) * (pz - mz)) <= ((PILLAR_CIRCLE_RADIUS + PILLAR_BUILD_ACCESS) * (PILLAR_CIRCLE_RADIUS + PILLAR_BUILD_ACCESS))) {
 		return true;
 	}
