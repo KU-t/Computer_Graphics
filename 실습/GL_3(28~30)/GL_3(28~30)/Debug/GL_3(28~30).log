@@ -1,15 +1,1 @@
-﻿  29.cpp
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(54): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(68): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(133): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(144): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(145): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(161): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(162): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(174): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(179): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(284): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(298): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(312): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\실습\gl_3(28~30)\gl_3(28~30)\29.cpp(352): warning C4244: '인수': 'double'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  GL_3(28~30).vcxproj -> C:\Users\태균\Desktop\2018-2\Computer_graphics\Computer_Graphics\실습\GL_3(28~30)\Debug\GL_3(28~30).exe
+﻿  GL_3(28~30).vcxproj -> C:\Users\태균\Desktop\2018-2\Computer_graphics\Computer_Graphics\실습\GL_3(28~30)\Debug\GL_3(28~30).exe

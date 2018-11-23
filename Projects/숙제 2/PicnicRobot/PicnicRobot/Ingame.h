@@ -40,6 +40,8 @@ bool Collision_New_Pillar(float px, float pz, float mx, float my);
 bool Collision_Pillar_Pillar(float p1_x, float p1_z, float p2_x, float p2_z);
 bool Every_Pillar_Not_Collision();
 bool Every_Pillar_Not_Click_Collision();
+void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4);
+void Draw_Pillars_Spline();
 
 class Angle {
 public:

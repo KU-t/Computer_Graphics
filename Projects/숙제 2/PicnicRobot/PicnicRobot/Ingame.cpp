@@ -52,6 +52,8 @@ GLvoid drawScene(GLvoid) {
 
 	Draw_Objects();
 
+	Draw_Pillars_Spline();
+
 	glPopMatrix();
 
 	glutSwapBuffers();
@@ -163,7 +165,7 @@ void Motion(int x, int y) {
 		if (select_pillar){
 			if (-1 < select_pillar_index) {
 				if (pillar[select_pillar_index]) {
-					if (-2 * (y - WINDOW_SIZE_Y / 4) > -750.f)
+					if (-750.f < my && my < 300.f)
 						pillar[select_pillar_index]->y = my + WINDOW_SIZE_Y;
 				}
 			}
@@ -412,4 +414,52 @@ bool Every_Pillar_Not_Click_Collision() {
 		}
 	}
 	return true;
+}
+
+void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4) {
+	float px[4] = { P1->x, P2->x, P3->x, P4->x };
+	float py[4] = { P1->y, P2->y, P3->y, P4->y };
+	float pz[4] = { P1->z, P2->z, P3->z, P4->z };
+
+	for (int i = 0; i < 100; i += 2) {
+		float t = i * 0.01;
+		float x = ((-t * t * t + 2 * t * t - t)*px[0] + (3 * t * t * t - 5 * t * t + 2)*px[1] + (-3 * t * t * t + 4 * t * t + t)*px[2] + (t * t * t - t * t)*px[3]) / 2;
+		float y = ((-t * t * t + 2 * t * t - t)*py[0] + (3 * t * t * t - 5 * t * t + 2)*py[1] + (-3 * t * t * t + 4 * t * t + t)*py[2] + (t * t * t - t * t)*py[3]) / 2;
+		float z = ((-t * t * t + 2 * t * t - t)*pz[0] + (3 * t * t * t - 5 * t * t + 2)*pz[1] + (-3 * t * t * t + 4 * t * t + t)*pz[2] + (t * t * t - t * t)*pz[3]) / 2;
+		glPushMatrix();
+		glTranslatef(x, y - WINDOW_SIZE_Y/2, z);
+		glColor4f(0.f, 0.f, 0.f, 1.f);
+		glutSolidSphere(10, 10, 10);
+		glPopMatrix();
+	}
+}
+
+void Draw_Pillars_Spline() {
+	if (pillar[3]) {
+		int pillar_exist;
+		for (int i = 0; i < MAX_PILLAR; i++) {
+			if (pillar[i]) {
+				pillar_exist = i + 1;
+			}
+			else
+				break;
+		}
+
+		for (int i = 0; i < pillar_exist; i++) {
+			int p1 = (pillar_exist + i) % pillar_exist;
+			int p2 = (pillar_exist + i + 1) % pillar_exist;
+			int p3 = (pillar_exist + i + 2) % pillar_exist;
+			int p4 = (pillar_exist + i + 3) % pillar_exist;
+			Draw_Spline(pillar[p1], pillar[p2], pillar[p3], pillar[p4]);
+		}
+	}
+}
+
+void Draw_Rail() {
+	glPushMatrix();
+	glTranslatef();
+	glRotatef();
+	glColor4f();
+	
+	glPopMatrix();
 }
