@@ -4,6 +4,7 @@ VIEW view = Orthographic;
 SCENE scene = TOP_VIEW;
 Ground ground;
 Pillar *pillar[MAX_PILLAR];
+Rail rail;
 Angle Angle_x(90.f), Angle_y, Angle_z;
 float move_x = 0, move_y = 0, move_z = 0;
 float mx, my, mz;
@@ -38,7 +39,7 @@ GLvoid drawScene(GLvoid) {
 
 	if (!view) {
 		glLoadIdentity();
-		gluLookAt(move_x, move_y, move_z + 2400.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
+		gluLookAt(move_x, move_y, move_z + 1200.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
 	}
 
 
@@ -416,20 +417,34 @@ bool Every_Pillar_Not_Click_Collision() {
 	return true;
 }
 
-void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4) {
+void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4, int i) {
 	float px[4] = { P1->x, P2->x, P3->x, P4->x };
 	float py[4] = { P1->y, P2->y, P3->y, P4->y };
 	float pz[4] = { P1->z, P2->z, P3->z, P4->z };
 
-	for (int i = 0; i < 100; i += 2) {
+	for (int i = 0; i < SPLINE_COUNT; i += 2) {
 		float t = i * 0.01;
 		float x = ((-t * t * t + 2 * t * t - t)*px[0] + (3 * t * t * t - 5 * t * t + 2)*px[1] + (-3 * t * t * t + 4 * t * t + t)*px[2] + (t * t * t - t * t)*px[3]) / 2;
 		float y = ((-t * t * t + 2 * t * t - t)*py[0] + (3 * t * t * t - 5 * t * t + 2)*py[1] + (-3 * t * t * t + 4 * t * t + t)*py[2] + (t * t * t - t * t)*py[3]) / 2;
 		float z = ((-t * t * t + 2 * t * t - t)*pz[0] + (3 * t * t * t - 5 * t * t + 2)*pz[1] + (-3 * t * t * t + 4 * t * t + t)*pz[2] + (t * t * t - t * t)*pz[3]) / 2;
+		
+		float nt = (i+1) * 0.01;
+		float nx = ((-nt * nt * nt + 2 * nt * nt - nt)*px[0] + (3 * nt * nt * nt - 5 * nt * nt + 2)*px[1] + (-3 * nt * nt * nt + 4 * nt * nt + nt)*px[2] + (nt * nt * nt - nt * nt)*px[3]) / 2;
+		float ny = ((-nt * nt * nt + 2 * nt * nt - nt)*py[0] + (3 * nt * nt * nt - 5 * nt * nt + 2)*py[1] + (-3 * nt * nt * nt + 4 * nt * nt + nt)*py[2] + (nt * nt * nt - nt * nt)*py[3]) / 2;
+		float nz = ((-nt * nt * nt + 2 * nt * nt - nt)*pz[0] + (3 * nt * nt * nt - 5 * nt * nt + 2)*pz[1] + (-3 * nt * nt * nt + 4 * nt * nt + nt)*pz[2] + (nt * nt * nt - nt * nt)*pz[3]) / 2;
+
+		float xx = nx - x;
+		float yy = ny - y;
+		float zz = nz - z;
+
+		float spline_x = abs(rad(atan(yy/xx)));
+		float spline_y = abs(rad(atan(zz / sqrt(xx*xx+yy*yy))));
+
 		glPushMatrix();
-		glTranslatef(x, y - WINDOW_SIZE_Y/2, z);
-		glColor4f(0.f, 0.f, 0.f, 1.f);
-		glutSolidSphere(10, 10, 10);
+		glTranslatef(x, y - WINDOW_SIZE_Y/2 + 30, z);
+		glRotatef(spline_x, 0.f, 0.f, 1.f);
+		glRotatef(spline_y, 0.f, 1.f, 0.f);
+		rail.Draw(i, t);
 		glPopMatrix();
 	}
 }
@@ -450,16 +465,7 @@ void Draw_Pillars_Spline() {
 			int p2 = (pillar_exist + i + 1) % pillar_exist;
 			int p3 = (pillar_exist + i + 2) % pillar_exist;
 			int p4 = (pillar_exist + i + 3) % pillar_exist;
-			Draw_Spline(pillar[p1], pillar[p2], pillar[p3], pillar[p4]);
+			Draw_Spline(pillar[p1], pillar[p2], pillar[p3], pillar[p4],i);
 		}
 	}
-}
-
-void Draw_Rail() {
-	glPushMatrix();
-	glTranslatef();
-	glRotatef();
-	glColor4f();
-	
-	glPopMatrix();
 }

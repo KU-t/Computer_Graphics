@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Ground.h"
 #include "Pillar.h"
+#include "Rail.h"
 
 using namespace std;
 
@@ -12,11 +13,16 @@ using namespace std;
 #define WINDOW_SIZE_Y 800
 #define WINDOW_SIZE_Z 800
 #define deg(x) 3.141592*x/180
+#define rad(x) 180 * x / 3.141592
 
 #define MAX_PILLAR 10
 #define PILLAR_HEIGHT 50.f
 #define PILLAR_CIRCLE_RADIUS 30.f
 #define PILLAR_BUILD_ACCESS 100.f
+
+#define SPLINE_COUNT 100
+
+#define MAX_RAIL MAX_PILLAR * 100
 
 enum VIEW { Perspective, Orthographic };
 enum SCENE { TOP_VIEW, FRONT_VIEW, PLAY_VIEW };
