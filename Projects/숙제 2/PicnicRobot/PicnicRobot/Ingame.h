@@ -6,6 +6,7 @@
 #include "Ground.h"
 #include "Pillar.h"
 #include "Rail.h"
+#include <time.h>
 
 using namespace std;
 
@@ -15,14 +16,16 @@ using namespace std;
 #define deg(x) 3.141592*x/180
 #define rad(x) 180 * x / 3.141592
 
-#define MAX_PILLAR 10
+#define MAX_PILLAR 30	
+#define MAX_ROCK 10
+#define MAX_ROCK_PILLAR MAX_PILLAR + MAX_ROCK
+
 #define PILLAR_HEIGHT 50.f
 #define PILLAR_CIRCLE_RADIUS 30.f
-#define PILLAR_BUILD_ACCESS 100.f
+
 
 #define SPLINE_COUNT 100
 
-#define MAX_RAIL MAX_PILLAR * 100
 
 enum VIEW { Perspective, Orthographic };
 enum SCENE { TOP_VIEW, FRONT_VIEW, PLAY_VIEW };
@@ -42,12 +45,14 @@ void Change_Scene(SCENE in_scene, float in_move_x, float in_move_y, float in_mov
 void Add_Pillar(float x, float z);
 int Find_Pillar();
 bool Collision_Pillar_mouse(SCENE scene, float px, float py, float mx, float my);
-bool Collision_New_Pillar(float px, float pz, float mx, float my);
-bool Collision_Pillar_Pillar(float p1_x, float p1_z, float p2_x, float p2_z);
+bool Collision_New_Pillar(float px, float pz, float mx, float my, float in_access_size);
+bool Collision_Pillar_Pillar(float p1_x, float p1_z, float p2_x, float p2_z, float p_access_size);
 bool Every_Pillar_Not_Collision();
 bool Every_Pillar_Not_Click_Collision();
-void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4);
+void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4, int i);
 void Draw_Pillars_Spline();
+void Draw_rollercoaster();
+void Draw_tunnel();
 
 class Angle {
 public:

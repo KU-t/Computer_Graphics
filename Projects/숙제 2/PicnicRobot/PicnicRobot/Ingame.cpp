@@ -3,9 +3,10 @@
 VIEW view = Orthographic;
 SCENE scene = TOP_VIEW;
 Ground ground;
-Pillar *pillar[MAX_PILLAR];
+Pillar *pillar[MAX_ROCK_PILLAR];
 Rail rail;
 Angle Angle_x(90.f), Angle_y, Angle_z;
+
 float move_x = 0, move_y = 0, move_z = 0;
 float mx, my, mz;
 
@@ -13,10 +14,21 @@ int select_pillar_index;
 bool select_pillar = false;
 int click_not_index = -1;
 
+int draw_Rollercoaster_pillar_num = 0;
+int draw_Rollercoaster_pillar_t = 0;
+
 void main(int argc, char **argv) {
 	//init_pillar
-	for (int i = 0; i < MAX_PILLAR; i++) pillar[i] = NULL;
+	srand((unsigned)time(NULL));
 
+	for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
+		if (i < MAX_ROCK) {
+			int x = (rand() % (WINDOW_SIZE_X * 2)) - WINDOW_SIZE_X;
+			int z = (rand() % (WINDOW_SIZE_Z * 2)) - WINDOW_SIZE_Z;
+			pillar[i] = new Pillar(x, z, true);
+		}
+		else pillar[i] = NULL;
+	}
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); // 디스플레이 모드 설정
 	glutInitWindowPosition(100, 100);
@@ -54,6 +66,11 @@ GLvoid drawScene(GLvoid) {
 	Draw_Objects();
 
 	Draw_Pillars_Spline();
+	if (scene == PLAY_VIEW) {
+
+		Draw_rollercoaster();
+		Draw_tunnel();
+	}
 
 	glPopMatrix();
 
@@ -73,23 +90,25 @@ void Mouse(int button, int state, int x, int y) {
 			mx = 2 * (x - WINDOW_SIZE_X / 2);
 			mz = 2 * (y - WINDOW_SIZE_Z / 2);
 
-			// 마우스-기둥 찾기
-			for (int i = 0; i < MAX_PILLAR; i++) {
+			// 옮길 기둥 찾기
+			for (int i = MAX_ROCK; i < MAX_ROCK_PILLAR; i++) {
 				if (pillar[i]) {
-					if (Collision_Pillar_mouse(TOP_VIEW, pillar[i]->x, pillar[i]->z, mx, mz)) {
-						select_pillar_index = i;
-						pillar[select_pillar_index]->top_view = false;
-						select_pillar = true;
+					if (!pillar[i]->rock) {
+						if (Collision_Pillar_mouse(TOP_VIEW, pillar[i]->x, pillar[i]->z, mx, mz)) {
+							select_pillar_index = i;
+							pillar[select_pillar_index]->top_view = false;
+							select_pillar = true;
+						}
 					}
 				}
 			}
 
 			// 기둥 생성
 			if (!(select_pillar)) {
-				for (int i = 0; i < MAX_PILLAR; i++) {
+				for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
 					if (pillar[i]) {
-						if (Collision_New_Pillar(pillar[i]->x, pillar[i]->z, mx, mz)) {
-							if (Collision_Pillar_Pillar(pillar[i]->x, pillar[i]->z, mx, mz)) {
+						if (Collision_New_Pillar(pillar[i]->x, pillar[i]->z, mx, mz,pillar[i]->access_size)) {
+							if (Collision_Pillar_Pillar(pillar[i]->x, pillar[i]->z, mx, mz,pillar[i]->access_size)) {
 								click_not_index = i;
 								pillar[click_not_index]->click_mouse_collision = true;
 								break;
@@ -108,7 +127,7 @@ void Mouse(int button, int state, int x, int y) {
 			mx = 2 * (x - WINDOW_SIZE_X / 2);
 			my = -2 * (y - WINDOW_SIZE_Y / 2);
 			//cout << pillar[select_pillar]->y << "////" << my << endl;
-			for (int i = 0; i < MAX_PILLAR; i++) {
+			for (int i = MAX_ROCK; i < MAX_ROCK_PILLAR; i++) {
 				if (pillar[i]) {
 					if (Collision_Pillar_mouse(FRONT_VIEW, pillar[i]->x, pillar[i]->y, mx, my)) {
 						pillar[i]->select_front_view = true;
@@ -147,10 +166,10 @@ void Motion(int x, int y) {
 		mx = (float)(2 * (x - WINDOW_SIZE_X / 2));
 		mz = (float)(2 * (y - WINDOW_SIZE_Z / 2));
 		if (select_pillar) {
-			for (int i = 0; i < MAX_PILLAR; i++) {
+			for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
 				if (i == select_pillar_index)	continue;
 				if (pillar[i]) {
-					if (Collision_Pillar_Pillar(pillar[i]->x, pillar[i]->z, mx, mz)) pillar[i]->top_view_draw_collision = true;
+					if (Collision_Pillar_Pillar(pillar[i]->x, pillar[i]->z, mx, mz,pillar[i]->access_size)) pillar[i]->top_view_draw_collision = true;
 					else	pillar[i]->top_view_draw_collision = false;
 				}
 			}
@@ -179,17 +198,34 @@ void Motion(int x, int y) {
 void Timer(int value) {
 	Change_Angle_xyz();
 	if (scene == TOP_VIEW) {
-		for (int i = 0; i < MAX_PILLAR; i++) {
+		for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
 			if (i == select_pillar_index) continue;
 			if (pillar[i]) pillar[i]->top_view = true;
 		}
 	}
 
-	else {
-		for (int i = 0; i < MAX_PILLAR; i++) {
+	if (scene == PLAY_VIEW) {
+		int pillar_count = 0;
+		for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
+			if (pillar[i]) pillar_count = i + 1;
+		}
+
+		for (int i = 0; i < 5; i++) {
+			rail.draw_Rollercoaster_pillar_t[i] = (rail.draw_Rollercoaster_pillar_t[i] + 1) % SPLINE_COUNT;
+			if (rail.draw_Rollercoaster_pillar_t[i] == 0) {
+				rail.draw_Rollercoaster_pillar_num[i] = (rail.draw_Rollercoaster_pillar_num[i] + 1) % (pillar_count - MAX_ROCK);
+			}
+		}
+	}
+
+	
+
+	if(scene != TOP_VIEW){
+		for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
 			if (pillar[i]) pillar[i]->top_view = false;
 		}
 	}
+	
 	glutPostRedisplay();
 	glutTimerFunc(50, Timer, 1);
 }
@@ -348,7 +384,7 @@ bool Collision_CIrcles(float x1, float z1, float r1, float x2, float z2, float r
 void Draw_Objects() {
 	Draw_Coordinates();
 	ground.Draw();
-	for (int i = 0; i < MAX_PILLAR; i++) {
+	for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
 		if (pillar[i])	pillar[i]->Draw();
 	}
 }
@@ -358,11 +394,11 @@ void Add_Pillar(float x, float z) {
 
 	if (index < 0)	return;
 
-	pillar[index] = new Pillar(x, z);
+	pillar[index] = new Pillar(x, z, false);
 }
 
 int Find_Pillar() {
-	for (int i = 0; i < MAX_PILLAR; i++) {
+	for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
 		if (pillar[i] == NULL) return i;
 	}
 	return -1;
@@ -385,22 +421,22 @@ bool Collision_Pillar_mouse(SCENE scene, float px, float pyz, float mx, float my
 	}
 }
 
-bool Collision_New_Pillar(float px, float pz, float mx, float mz) {
-	if (((px - mx) * (px - mx) + (pz - mz) * (pz - mz)) <= ((PILLAR_CIRCLE_RADIUS + PILLAR_BUILD_ACCESS) * (PILLAR_CIRCLE_RADIUS + PILLAR_BUILD_ACCESS))) {
+bool Collision_New_Pillar(float px, float pz, float mx, float mz, float in_access_size) {
+	if (((px - mx) * (px - mx) + (pz - mz) * (pz - mz)) <= ((PILLAR_CIRCLE_RADIUS + in_access_size) * (PILLAR_CIRCLE_RADIUS + in_access_size))) {
 		return true;
 	}
 	return false;
 }
 
-bool Collision_Pillar_Pillar(float px, float pz, float mx, float mz) {
-	if (((px - mx) * (px - mx) + (pz - mz) * (pz - mz)) <= ((PILLAR_CIRCLE_RADIUS * 2 + PILLAR_BUILD_ACCESS) * (PILLAR_CIRCLE_RADIUS * 2 + PILLAR_BUILD_ACCESS))) {
+bool Collision_Pillar_Pillar(float px, float pz, float mx, float mz, float p_access_size) {
+	if (((px - mx) * (px - mx) + (pz - mz) * (pz - mz)) <= ((PILLAR_CIRCLE_RADIUS * 2 + p_access_size) * (PILLAR_CIRCLE_RADIUS * 2 + p_access_size))) {
 		return true;
 	}
 	return false;
 }
 
 bool Every_Pillar_Not_Collision() {
-	for (int i = 0; i < MAX_PILLAR; i++) {
+	for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
 		if (pillar[i]) {
 			if (pillar[i]->top_view_draw_collision)	return false;
 		}
@@ -409,7 +445,7 @@ bool Every_Pillar_Not_Collision() {
 }
 
 bool Every_Pillar_Not_Click_Collision() {
-	for (int i = 0; i < MAX_PILLAR; i++) {
+	for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
 		if (pillar[i]) {
 			if (pillar[i]->click_mouse_collision)	return false;
 		}
@@ -417,11 +453,12 @@ bool Every_Pillar_Not_Click_Collision() {
 	return true;
 }
 
-void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4, int i) {
+void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4, int count) {
 	float px[4] = { P1->x, P2->x, P3->x, P4->x };
 	float py[4] = { P1->y, P2->y, P3->y, P4->y };
 	float pz[4] = { P1->z, P2->z, P3->z, P4->z };
-
+	int num = count - MAX_ROCK;
+	int k = 0;
 	for (int i = 0; i < SPLINE_COUNT; i += 2) {
 		float t = i * 0.01;
 		float x = ((-t * t * t + 2 * t * t - t)*px[0] + (3 * t * t * t - 5 * t * t + 2)*px[1] + (-3 * t * t * t + 4 * t * t + t)*px[2] + (t * t * t - t * t)*px[3]) / 2;
@@ -437,35 +474,99 @@ void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4, int i) {
 		float yy = ny - y;
 		float zz = nz - z;
 
-		float spline_x = abs(rad(atan(yy/xx)));
-		float spline_y = abs(rad(atan(zz / sqrt(xx*xx+yy*yy))));
+		float spline_y = rad(acos(xx / sqrt(xx*xx+zz*zz)));
+		float spline_z = rad(acos( sqrt(xx*xx + zz * zz) / sqrt(xx*xx + zz * zz + yy * yy) )  );
+
 
 		glPushMatrix();
 		glTranslatef(x, y - WINDOW_SIZE_Y/2 + 30, z);
-		glRotatef(spline_x, 0.f, 0.f, 1.f);
-		glRotatef(spline_y, 0.f, 1.f, 0.f);
-		rail.Draw(i, t);
+		glRotatef(-spline_y, 0.f, 1.f, 0.f);
+		glRotatef(spline_z, 0.f, 0.f, 1.f);
+		rail.Draw();
+
+		if (num == 2) {
+			if (25 < i && 0 <= k && k < 25) {
+				rail.tunnel_x[k] = x;
+				rail.tunnel_y[k] = y;
+				rail.tunnel_z[k] = z;
+				rail.tunnel_spline_y[k] = spline_y;
+				rail.tunnel_spline_z[k++] = spline_z;
+			}
+		}
+
+		for (int j = 0; j < 5; j++) {
+			if (num == rail.draw_Rollercoaster_pillar_num[j]) {
+				if (i == rail.draw_Rollercoaster_pillar_t[j]) {
+					rail.x[j] = x;
+					rail.y[j] = y;
+					rail.z[j] = z;
+					rail.spline_y[j] = spline_y;
+					rail.spline_z[j] = spline_z;
+				}
+			}
+		}
 		glPopMatrix();
 	}
 }
 
 void Draw_Pillars_Spline() {
-	if (pillar[3]) {
-		int pillar_exist;
-		for (int i = 0; i < MAX_PILLAR; i++) {
+	if (pillar[MAX_ROCK]) {
+		int pillar_exist = 0;
+		for (int i = MAX_ROCK; i < MAX_ROCK_PILLAR; i++) {
 			if (pillar[i]) {
-				pillar_exist = i + 1;
+				pillar_exist++;
 			}
 			else
 				break;
 		}
 
 		for (int i = 0; i < pillar_exist; i++) {
-			int p1 = (pillar_exist + i) % pillar_exist;
-			int p2 = (pillar_exist + i + 1) % pillar_exist;
-			int p3 = (pillar_exist + i + 2) % pillar_exist;
-			int p4 = (pillar_exist + i + 3) % pillar_exist;
-			Draw_Spline(pillar[p1], pillar[p2], pillar[p3], pillar[p4],i);
+			int p1 = (pillar_exist + i) % pillar_exist + MAX_ROCK;
+			int p2 = (pillar_exist + i + 1) % pillar_exist + MAX_ROCK;
+			int p3 = (pillar_exist + i + 2) % pillar_exist + MAX_ROCK;
+			int p4 = (pillar_exist + i + 3) % pillar_exist + MAX_ROCK;
+			Draw_Spline(pillar[p1], pillar[p2], pillar[p3], pillar[p4],p2);
 		}
+	}
+}
+
+void Draw_rollercoaster() {
+	for (int i = 0; i < 5; i++) {
+		glPushMatrix();
+		glTranslatef(rail.x[i], rail.y[i] - WINDOW_SIZE_Y / 2 + 30, rail.z[i]);
+		glRotatef(rail.spline_y[i], 0.f, 1.f, 0.f);
+		glRotatef(rail.spline_z[i], 0.f, 0.f, 1.f);
+		glRotatef(90.f, 0.f, 1.f, 0.f);
+		if (i == 0) {
+
+		glColor4f(0.f, 1.f, 0.f, 1.f);
+		glutSolidSphere(30, 30, 30);
+
+		glPushMatrix();
+		glTranslatef(0.f, 15.f, 0.f);
+		glColor4f(0.f, 0.f, 0.f, 1.f);
+		glutSolidSphere(20, 30, 30);
+		glPopMatrix();
+		}
+
+		else {
+			glColor4f(0.f, 1.f, 0.f, 1.f);
+			glutSolidSphere(30 - 2 * i, 30, 30);
+		}
+		glPopMatrix();
+	}
+}
+
+void Draw_tunnel() {
+	for (int i = 0; i < MAX_TUNNEL; i++) {
+		glPushMatrix();
+		glTranslatef(rail.tunnel_x[i], rail.tunnel_y[i] - WINDOW_SIZE_Y / 2 + 30, rail.tunnel_z[i]);
+		glRotatef(rail.tunnel_spline_y[i], 0.f, 1.f, 0.f);
+		glRotatef(rail.tunnel_spline_z[i], 0.f, 0.f, 1.f);
+		glRotatef(90.f, 0.f, 1.f, 0.f);
+		glColor4f(0.2f, 0.125f, 0.f, 1.f);
+		glutSolidTorus(20, 100, 10, 10);
+			
+		glPopMatrix();
 	}
 }

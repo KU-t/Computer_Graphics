@@ -1,34 +1,33 @@
 #include "Rail.h"
 #include "ingame.h"
 
-Rail::Rail()
-{
+
+Rail::Rail(){
+	for (int i = 0; i < MAX_TUNNEL; i++) {
+		tunnel_x[i] = 0.f;
+		tunnel_y[i] = -300.f;
+		tunnel_z[i] = 0.f;
+	}
+
 }
 
 Rail::~Rail()
 {
 }
 
-void Rail::Draw(int num_pillar, int t){
+void Rail::Draw(){
 	glPushMatrix();
 	glColor4f(0.25f, 0.125f, 0.f, 1.f);
-	glutSolidCube(10);
+	glutSolidCube(5);
 
 	glPushMatrix();
-	glTranslatef(-10.f, 0.f, 0.f);
-	glutSolidSphere(10, 10, 10);
+	glTranslatef(-5.f, 0.f, 0.f);
+	glutSolidSphere(5, 10, 10);
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(10.f, 0.f, 0.f);
-	glutSolidSphere(10, 10, 10);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(0.f, 20.f, 0.f);
-	glScalef(1.f, 1.f, 0.3f);
-	glColor4f(1.f, 0.f, 0.f, 1.f);
-	glutSolidCube(20);
+	glTranslatef(5.f, 0.f, 0.f);
+	glutSolidSphere(5, 10, 10);
 	glPopMatrix();
 
 	glPopMatrix();
