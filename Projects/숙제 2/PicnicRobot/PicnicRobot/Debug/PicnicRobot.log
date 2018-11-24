@@ -1,16 +1,20 @@
-﻿  Ingame.cpp
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(20): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(28): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(90): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(91): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(127): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(128): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(336): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(350): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(364): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(463): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(468): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(477): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(478): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(422): warning C4715: 'Collision_Pillar_mouse': 모든 제어 경로에서 값을 반환하지는 않습니다.
+﻿  Ground.cpp
+  Ingame.cpp
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(22): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(30): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(93): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(94): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(130): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(131): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(365): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(379): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(393): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(492): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(497): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(506): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(507): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Pillar.cpp
+  Rail.cpp
+  코드를 생성하고 있습니다...
+c:\users\태균\desktop\2018-2\computer_graphics\computer_graphics\projects\숙제 2\picnicrobot\picnicrobot\ingame.cpp(451): warning C4715: 'Collision_Pillar_mouse': 모든 제어 경로에서 값을 반환하지는 않습니다.
   PicnicRobot.vcxproj -> C:\Users\태균\Desktop\2018-2\Computer_graphics\Computer_Graphics\Projects\숙제 2\PicnicRobot\Debug\PicnicRobot.exe

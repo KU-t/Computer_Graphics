@@ -17,6 +17,8 @@ int click_not_index = -1;
 int draw_Rollercoaster_pillar_num = 0;
 int draw_Rollercoaster_pillar_t = 0;
 
+SPEED game_speed = X1;
+
 void main(int argc, char **argv) {
 	//init_pillar
 	srand((unsigned)time(NULL));
@@ -67,9 +69,10 @@ GLvoid drawScene(GLvoid) {
 
 	Draw_Pillars_Spline();
 	if (scene == PLAY_VIEW) {
-
-		Draw_rollercoaster();
-		Draw_tunnel();
+		if (pillar[12]) {
+			Draw_rollercoaster();
+			Draw_tunnel();
+		}
 	}
 
 	glPopMatrix();
@@ -211,8 +214,9 @@ void Timer(int value) {
 		}
 
 		for (int i = 0; i < 5; i++) {
-			rail.draw_Rollercoaster_pillar_t[i] = (rail.draw_Rollercoaster_pillar_t[i] + 1) % SPLINE_COUNT;
-			if (rail.draw_Rollercoaster_pillar_t[i] == 0) {
+			rail.draw_Rollercoaster_pillar_t[i]  += game_speed ;
+			if (rail.draw_Rollercoaster_pillar_t[i] >= SPLINE_COUNT) {
+				rail.draw_Rollercoaster_pillar_t[i] = rail.draw_Rollercoaster_pillar_t[i] % SPLINE_COUNT;
 				rail.draw_Rollercoaster_pillar_num[i] = (rail.draw_Rollercoaster_pillar_num[i] + 1) % (pillar_count - MAX_ROCK);
 			}
 		}
@@ -242,53 +246,78 @@ void Keyboard(unsigned char key, int x, int y) {
 		select_pillar_index = -1;
 		select_pillar = false;
 		break;
+	
 	case '3':
 		Change_Scene(PLAY_VIEW, 0.f, 0.f, 0.f, 0.f, Perspective);
 		break;
+
 	case 'x':	case 'X':
-		Angle_x.sw = (Angle_x.sw + 1) % 2;
+		if (scene == PLAY_VIEW)
+			Angle_x.sw = (Angle_x.sw + 1) % 2;
 		break;
 	case 'y':	case 'Y':
-		Angle_y.sw = (Angle_y.sw + 1) % 2;
+		if (scene == PLAY_VIEW)
+			Angle_y.sw = (Angle_y.sw + 1) % 2;
 		break;
 	case 'z':	case 'Z':
-		Angle_z.sw = (Angle_z.sw + 1) % 2;
+		if (scene == PLAY_VIEW)
+			Angle_z.sw = (Angle_z.sw + 1) % 2;
 		break;
 	case 'a': case 'A':
-		move_x -= 10;
+		if (scene == PLAY_VIEW)
+			move_x -= 10;
 		break;
 
 	case 'd': case 'D':
-		move_x += 10;
+		if (scene == PLAY_VIEW)
+			move_x += 10;
 		break;
 
 	case 'w': case 'W':
-		move_y += 10;
+		if (scene == PLAY_VIEW)
+			move_y += 10;
 		break;
 
 	case 's': case 'S':
-		move_y -= 10;
+		if (scene == PLAY_VIEW)
+			move_y -= 10;
 		break;
 	case '+': case '=':
-		move_z += 10;
+		if (scene == PLAY_VIEW)
+			move_z += 10;
 		break;
 
 	case '-': case '_':
-		move_z -= 10;
+		if (scene == PLAY_VIEW)
+			move_z -= 10;
 		break;
 
 	case 'i': case 'I':
-		move_x = 0.f;
-		move_y = 0.f;
-		move_z = 0.f;
-		Angle_x.radian = 0.f;
-		Angle_y.radian = 0.f;
-		Angle_z.radian = 0.f;
+		if (scene == PLAY_VIEW) {
+			move_x = 0.f;
+			move_y = 0.f;
+			move_z = 0.f;
+			Angle_x.radian = 0.f;
+			Angle_y.radian = 0.f;
+			Angle_z.radian = 0.f;
+		}
 		break;
 
 	case 'p':	case 'P':
 		view = (VIEW)((view + 1) % 2);
 		Reshape(WINDOW_SIZE_X, WINDOW_SIZE_Y);
+		break;
+
+	case '[':
+		if (game_speed == X7)	game_speed = X5;
+		else if (game_speed == X5)	game_speed = X3;
+		else if (game_speed == X3)	game_speed = X1;
+		break;
+
+	case ']':
+		if (game_speed == X1)	game_speed = X3;
+		else if (game_speed == X3)	game_speed = X5;
+		else if (game_speed == X5)	game_speed = X7;
 		break;
 	}
 	glutPostRedisplay();

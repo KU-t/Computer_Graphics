@@ -29,6 +29,7 @@ using namespace std;
 
 enum VIEW { Perspective, Orthographic };
 enum SCENE { TOP_VIEW, FRONT_VIEW, PLAY_VIEW };
+enum SPEED {X1 = 1, X3 = 3, X5 = 5, X7 = 7};
 
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
