@@ -6,6 +6,7 @@ Snow::Snow(){
 	i = rand() % (WINDOW_SIZE_X / 10);
 	j = rand() % (WINDOW_SIZE_Z / 10);
 	y = rand() % 1600;
+	
 }
 
 void Snow::Draw(int weather) {
