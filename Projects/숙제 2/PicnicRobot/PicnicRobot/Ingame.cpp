@@ -5,6 +5,7 @@ SCENE scene = TOP_VIEW;
 Ground ground;
 Pillar *pillar[MAX_ROCK_PILLAR];
 Rail rail;
+Human *human[MAX_HUMAN];
 Angle Angle_x(90.f), Angle_y, Angle_z;
 
 float move_x = 0, move_y = 0, move_z = 0;
@@ -31,6 +32,10 @@ void main(int argc, char **argv) {
 		}
 		else pillar[i] = NULL;
 	}
+
+	for (int i = 0; i < MAX_HUMAN; i++)	human[i] = new Human(); 
+
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); // 디스플레이 모드 설정
 	glutInitWindowPosition(100, 100);
@@ -72,6 +77,10 @@ GLvoid drawScene(GLvoid) {
 		if (pillar[12]) {
 			Draw_rollercoaster();
 			Draw_tunnel();
+		}
+
+		for (int i = 0; i < MAX_HUMAN; i++) {
+			if(human[i])	human[i]->Draw();
 		}
 	}
 
@@ -218,6 +227,45 @@ void Timer(int value) {
 			if (rail.draw_Rollercoaster_pillar_t[i] >= SPLINE_COUNT) {
 				rail.draw_Rollercoaster_pillar_t[i] = rail.draw_Rollercoaster_pillar_t[i] % SPLINE_COUNT;
 				rail.draw_Rollercoaster_pillar_num[i] = (rail.draw_Rollercoaster_pillar_num[i] + 1) % (pillar_count - MAX_ROCK);
+			}
+		}
+
+		for (int i = 0; i < MAX_HUMAN; i++) {
+			if (human[i]) {
+				human[i]->Update();
+				
+				int rad_random = (rand() % 60) - 30;
+				int copy_rad = human[i]->rad_move;
+				float copy_x = human[i]->x, copy_z = human[i]->z;
+
+				copy_rad = ((int)(copy_rad)+rad_random) % 360;
+
+				copy_x += HUMAN_SPEED * cos(deg(copy_rad));
+				if (-WINDOW_SIZE_X > copy_x)	copy_x = -WINDOW_SIZE_X;
+				if (copy_x > WINDOW_SIZE_X)	copy_x = WINDOW_SIZE_X;
+
+				copy_z -= HUMAN_SPEED * sin(deg(copy_rad));
+				if (-WINDOW_SIZE_Z > copy_z)	copy_z = -WINDOW_SIZE_Z;
+				if (copy_z > WINDOW_SIZE_Z)	copy_z = WINDOW_SIZE_Z;
+				
+				bool move_check = true;
+
+				for (int j = 0; j < MAX_PILLAR; j++) {
+					if (pillar[j]) {
+						if (Collision_CIrcles(pillar[j]->x, pillar[j]->z, PILLAR_CIRCLE_RADIUS,human[i]->x, human[i]->z, HUMAN_SIZE)) move_check = false;
+					}
+				}
+
+				if (move_check) {
+					human[i]->rad_move = copy_rad;
+					human[i]->x = copy_x;
+					human[i]->z = copy_z;
+				}
+				else {
+					human[i]->rad_move += 180.f;
+					human[i]->x += -1 * HUMAN_SPEED * cos(deg(rad_random));
+					human[i]->z += -1 * HUMAN_SPEED * sin(deg(rad_random));;
+				}
 			}
 		}
 	}

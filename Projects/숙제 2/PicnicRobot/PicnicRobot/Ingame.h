@@ -3,10 +3,12 @@
 #include <gl/freeglut.h>
 #include <math.h>
 #include <iostream>
+#include <time.h>
+
 #include "Ground.h"
 #include "Pillar.h"
 #include "Rail.h"
-#include <time.h>
+#include "Human.h"
 
 using namespace std;
 
@@ -23,8 +25,10 @@ using namespace std;
 #define PILLAR_HEIGHT 50.f
 #define PILLAR_CIRCLE_RADIUS 30.f
 
+#define MAX_HUMAN 2
 
 #define SPLINE_COUNT 100
+
 
 
 enum VIEW { Perspective, Orthographic };

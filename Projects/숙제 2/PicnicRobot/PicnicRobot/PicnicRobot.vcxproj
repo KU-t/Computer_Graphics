@@ -140,12 +140,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Human.cpp" />
     <ClCompile Include="Ingame.cpp" />
     <ClCompile Include="Pillar.cpp" />
     <ClCompile Include="Rail.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Human.h" />
     <ClInclude Include="Ingame.h" />
     <ClInclude Include="Pillar.h" />
     <ClInclude Include="Rail.h" />
