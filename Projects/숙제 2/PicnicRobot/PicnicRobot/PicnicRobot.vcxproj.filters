@@ -36,6 +36,9 @@
     <ClCompile Include="Human.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Snow.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ingame.h">
@@ -51,6 +54,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Human.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Snow.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

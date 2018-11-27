@@ -10,7 +10,7 @@ public:
 	float rad_hand_foot = 0.f;
 	float rad_move = 0.f;
 	float speed = HUMAN_SPEED;
-
+	bool choice;
 	Human();
 	~Human();
 	void Update();

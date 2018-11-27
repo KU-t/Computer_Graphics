@@ -6,9 +6,11 @@ Ground ground;
 Pillar *pillar[MAX_ROCK_PILLAR];
 Rail rail;
 Human *human[MAX_HUMAN];
+Snow *snow[MAX_SNOW];
+
 Angle Angle_x(90.f), Angle_y, Angle_z;
 
-float move_x = 0, move_y = 0, move_z = 0;
+float move_x = 0, move_y = 0, move_z = 300;
 float mx, my, mz;
 
 int select_pillar_index;
@@ -19,6 +21,10 @@ int draw_Rollercoaster_pillar_num = 0;
 int draw_Rollercoaster_pillar_t = 0;
 
 SPEED game_speed = X1;
+VIEWER view_point = NORMAL;
+
+int wether = 0;
+
 
 void main(int argc, char **argv) {
 	//init_pillar
@@ -35,6 +41,9 @@ void main(int argc, char **argv) {
 
 	for (int i = 0; i < MAX_HUMAN; i++)	human[i] = new Human(); 
 
+	human[MAX_HUMAN - 1]->choice = true;
+
+	for (int i = 0; i < MAX_SNOW; i++) snow[i] = NULL;
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); // 디스플레이 모드 설정
@@ -57,8 +66,31 @@ GLvoid drawScene(GLvoid) {
 
 
 	if (!view) {
-		glLoadIdentity();
-		gluLookAt(move_x, move_y, move_z + 1200.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
+		if (view_point == NORMAL) {
+			glLoadIdentity();
+			gluLookAt(move_x, move_y, move_z + 1200.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
+		}
+		else if (view_point == HUMAN && human[MAX_HUMAN - 1]) {
+			int x, z;
+			if (human[MAX_HUMAN - 1]->rad_move == 0) {
+				x = 1000000;
+				z = 0;
+			}
+			else if (human[MAX_HUMAN - 1]->rad_move == 90) {
+				x = 0;
+				z = -1000000;
+			}
+			else if (human[MAX_HUMAN - 1]->rad_move == 180) {
+				x = -1000000;
+				z = 0;
+			}
+			else if (human[MAX_HUMAN - 1]->rad_move == 270) {
+				x = 0;
+				z = 1000000;
+			}
+			glLoadIdentity();
+			gluLookAt(human[MAX_HUMAN - 1]->x, human[MAX_HUMAN - 1]->y + 10, human[MAX_HUMAN - 1]->z, x, 0.f, z, 0.f, 1.f, 0.f);
+		}
 	}
 
 
@@ -82,6 +114,11 @@ GLvoid drawScene(GLvoid) {
 		for (int i = 0; i < MAX_HUMAN; i++) {
 			if(human[i])	human[i]->Draw();
 		}
+
+		for (int i = 0; i < MAX_SNOW; i++) {
+			if (snow[i])	snow[i]->Draw(wether);
+		}
+	
 	}
 
 	glPopMatrix();
@@ -230,9 +267,8 @@ void Timer(int value) {
 			}
 		}
 
-		for (int i = 0; i < MAX_HUMAN; i++) {
+		for (int i = 0; i < MAX_HUMAN - 1; i++) {
 			if (human[i]) {
-				human[i]->Update();
 				
 				int rad_random = (rand() % 60) - 30;
 				int copy_rad = human[i]->rad_move;
@@ -268,6 +304,10 @@ void Timer(int value) {
 				}
 			}
 		}
+		for (int i = 0; i < MAX_HUMAN; i++) {
+			if (human[i]) human[i]->Update();
+		}
+		Update_Snow();
 	}
 
 	
@@ -290,13 +330,42 @@ void Keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case '2':
-		Change_Scene(FRONT_VIEW, 0.f, 0.f, 0.f, 0.f, Orthographic);
-		select_pillar_index = -1;
-		select_pillar = false;
+		if (pillar[14]) {
+			Change_Scene(FRONT_VIEW, 0.f, 0.f, 0.f, 0.f, Orthographic);
+			select_pillar_index = -1;
+			select_pillar = false;
+		}
 		break;
 	
 	case '3':
-		Change_Scene(PLAY_VIEW, 0.f, 0.f, 0.f, 0.f, Perspective);
+		if (pillar[14]) {
+			Change_Scene(PLAY_VIEW, 0.f, 0.f, 0.f, 0.f, Perspective);
+		}
+		break;
+
+	case '4':
+		if (scene == PLAY_VIEW)
+			view_point = NORMAL;
+		break;
+
+	case '5':
+		if (scene == PLAY_VIEW)
+			view_point = HUMAN;
+		break;
+
+	case '8':
+		if (scene == PLAY_VIEW)
+			wether = 0;
+		break;
+
+	case '9':
+		if (scene == PLAY_VIEW)
+			wether = 1;		
+		break;
+
+	case '0':
+		if (scene == PLAY_VIEW)
+			wether = 2;		
 		break;
 
 	case 'x':	case 'X':
@@ -366,6 +435,42 @@ void Keyboard(unsigned char key, int x, int y) {
 		if (game_speed == X1)	game_speed = X3;
 		else if (game_speed == X3)	game_speed = X5;
 		else if (game_speed == X5)	game_speed = X7;
+		break;
+
+	case 'u': case 'U':
+		if (scene == PLAY_VIEW) {
+			if (human[MAX_HUMAN - 1]) {
+				human[MAX_HUMAN - 1]->z -= HUMAN_CONTROL_SPEED;
+				human[MAX_HUMAN - 1]->rad_move = 90;
+			}
+		}
+		break;
+
+	case 'j': case 'J':
+		if (scene == PLAY_VIEW) {
+			if (human[MAX_HUMAN - 1]) {
+				human[MAX_HUMAN - 1]->z += HUMAN_CONTROL_SPEED;
+				human[MAX_HUMAN - 1]->rad_move = 270;
+			}
+		}
+		break;
+
+	case 'h': case 'H':
+		if (scene == PLAY_VIEW) {
+			if (human[MAX_HUMAN - 1]) {
+				human[MAX_HUMAN - 1]->x -= HUMAN_CONTROL_SPEED;
+				human[MAX_HUMAN - 1]->rad_move = 180;
+			}
+		}
+		break;
+
+	case 'k': case 'K':
+		if (scene == PLAY_VIEW) {
+			if (human[MAX_HUMAN - 1]) {
+				human[MAX_HUMAN - 1]->x += HUMAN_CONTROL_SPEED;
+				human[MAX_HUMAN - 1]->rad_move = 0;
+			}
+		}
 		break;
 	}
 	glutPostRedisplay();
@@ -645,5 +750,15 @@ void Draw_tunnel() {
 		glutSolidTorus(20, 100, 10, 10);
 			
 		glPopMatrix();
+	}
+}
+
+void Update_Snow() {
+	for (int i = 0; i < MAX_SNOW; i++) {
+		if (snow[i] == NULL)	snow[i] = new Snow;
+		if (snow[i]) {
+			snow[i]->y -= 10.f;
+			if (snow[i]->y <= 0.f) snow[i] = NULL;
+		}
 	}
 }

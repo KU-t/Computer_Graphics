@@ -9,6 +9,7 @@
 #include "Pillar.h"
 #include "Rail.h"
 #include "Human.h"
+#include "Snow.h"
 
 using namespace std;
 
@@ -25,15 +26,18 @@ using namespace std;
 #define PILLAR_HEIGHT 50.f
 #define PILLAR_CIRCLE_RADIUS 30.f
 
-#define MAX_HUMAN 2
+#define MAX_HUMAN 3
 
 #define SPLINE_COUNT 100
 
+#define HUMAN_CONTROL_SPEED 10
 
+#define MAX_SNOW 200
 
 enum VIEW { Perspective, Orthographic };
 enum SCENE { TOP_VIEW, FRONT_VIEW, PLAY_VIEW };
 enum SPEED {X1 = 1, X3 = 3, X5 = 5, X7 = 7};
+enum VIEWER {NORMAL, HUMAN};
 
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
@@ -58,6 +62,7 @@ void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4, int i);
 void Draw_Pillars_Spline();
 void Draw_rollercoaster();
 void Draw_tunnel();
+void Update_Snow();
 
 class Angle {
 public:

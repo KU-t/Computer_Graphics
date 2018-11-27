@@ -6,6 +6,7 @@ Human::Human(){
 	x = 0;
 	y = - 300;
 	z = 0;
+	choice = false;
 }
 
 
@@ -33,7 +34,16 @@ void Human::Draw(){
 
 	glPushMatrix(); // »ç¶÷
 	glTranslatef(x, y, z);
-	glutWireSphere(HUMAN_SIZE, 10, 10);
+	//glutWireSphere(HUMAN_SIZE, 10, 10);
+	
+	if (choice) {
+		glPushMatrix();
+		glTranslatef(0.f, 100.f, 0.f);
+		glRotatef(90.f, 1.f, 0.f, 0.f);
+		glColor4f(1.f, 1.f, 0.f, 1.f);
+		glutSolidCone(10, 70, 100, 100);
+		glPopMatrix();
+	}
 
 	glRotatef(rad_move, 0.f, 1.f, 0.f);
 					//glTranslatef(-40.f, 115.f, 0.f);
@@ -51,7 +61,7 @@ void Human::Draw(){
 					//	glPopMatrix(); // 1
 					//}
 					//glPopMatrix(); // ÆÈ
-
+	
 	glPushMatrix(); // ÆÈ
 	glColor4f(1.f, 0.8f, 0.6f, 1.f);
 	for (float i = -1.f; i < 2.f; i += 2.f) {
