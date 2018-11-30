@@ -11,6 +11,7 @@ Snow *snow[MAX_SNOW];
 Angle Angle_x(90.f), Angle_y, Angle_z;
 
 float move_x = 0, move_y = 0, move_z = 300;
+
 float mx, my, mz;
 
 int select_pillar_index;
@@ -39,8 +40,11 @@ void main(int argc, char **argv) {
 		else pillar[i] = NULL;
 	}
 
-	for (int i = 0; i < MAX_HUMAN; i++)	human[i] = new Human(); 
-
+	for (int i = 0; i < MAX_HUMAN; i++) {
+		human[i] = new Human();
+		human[i]->x = (i - 1) * (WINDOW_SIZE_X / 2);
+		human[i]->z = (i - 1) * (WINDOW_SIZE_Z / 2);
+	}
 	human[MAX_HUMAN - 1]->choice = true;
 
 	for (int i = 0; i < MAX_SNOW; i++) snow[i] = NULL;
@@ -90,6 +94,10 @@ GLvoid drawScene(GLvoid) {
 			}
 			glLoadIdentity();
 			gluLookAt(human[MAX_HUMAN - 1]->x, human[MAX_HUMAN - 1]->y + 10, human[MAX_HUMAN - 1]->z, x, 0.f, z, 0.f, 1.f, 0.f);
+		}
+		else if (view_point == ROLLERCOSTER) {
+			glLoadIdentity();
+			gluLookAt(rail.x[1], rail.y[1] + 100 - WINDOW_SIZE_Y / 2, rail.z[1], rail.x[0], rail.y[0] + 100 - WINDOW_SIZE_Y / 2, rail.z[0], 0.f, 1.f, 0.f);
 		}
 	}
 
@@ -307,6 +315,19 @@ void Timer(int value) {
 		for (int i = 0; i < MAX_HUMAN; i++) {
 			if (human[i]) human[i]->Update();
 		}
+
+		if (Collision_CIrcles(human[0]->x, human[0]->z, HUMAN_SIZE, human[MAX_HUMAN - 1]->x, human[MAX_HUMAN - 1]->z, HUMAN_SIZE)) {
+			human[0]->x = human[MAX_HUMAN - 1]->x - (HUMAN_SIZE * 3 / 2);
+			human[0]->z = human[MAX_HUMAN - 1]->z;
+			human[0]->rad_move = human[MAX_HUMAN - 1]->rad_move;
+		}
+
+		if (Collision_CIrcles(human[1]->x, human[1]->z, HUMAN_SIZE, human[MAX_HUMAN - 1]->x, human[MAX_HUMAN - 1]->z, HUMAN_SIZE)) {
+			human[1]->x = human[MAX_HUMAN - 1]->x + (HUMAN_SIZE * 3 / 2);
+			human[1]->z = human[MAX_HUMAN - 1]->z;
+			human[1]->rad_move = human[MAX_HUMAN - 1]->rad_move;
+		}
+
 		Update_Snow();
 	}
 
@@ -351,6 +372,11 @@ void Keyboard(unsigned char key, int x, int y) {
 	case '5':
 		if (scene == PLAY_VIEW)
 			view_point = HUMAN;
+		break;
+
+	case '6':
+		if (scene == PLAY_VIEW)
+			view_point = ROLLERCOSTER;
 		break;
 
 	case '8':
@@ -641,12 +667,13 @@ void Draw_Spline(Pillar *P1, Pillar *P2, Pillar *P3, Pillar *P4, int count) {
 	float pz[4] = { P1->z, P2->z, P3->z, P4->z };
 	int num = count - MAX_ROCK;
 	int k = 0;
+
 	for (int i = 0; i < SPLINE_COUNT; i += 2) {
 		float t = i * 0.01;
 		float x = ((-t * t * t + 2 * t * t - t)*px[0] + (3 * t * t * t - 5 * t * t + 2)*px[1] + (-3 * t * t * t + 4 * t * t + t)*px[2] + (t * t * t - t * t)*px[3]) / 2;
 		float y = ((-t * t * t + 2 * t * t - t)*py[0] + (3 * t * t * t - 5 * t * t + 2)*py[1] + (-3 * t * t * t + 4 * t * t + t)*py[2] + (t * t * t - t * t)*py[3]) / 2;
 		float z = ((-t * t * t + 2 * t * t - t)*pz[0] + (3 * t * t * t - 5 * t * t + 2)*pz[1] + (-3 * t * t * t + 4 * t * t + t)*pz[2] + (t * t * t - t * t)*pz[3]) / 2;
-		
+
 		float nt = (i+1) * 0.01;
 		float nx = ((-nt * nt * nt + 2 * nt * nt - nt)*px[0] + (3 * nt * nt * nt - 5 * nt * nt + 2)*px[1] + (-3 * nt * nt * nt + 4 * nt * nt + nt)*px[2] + (nt * nt * nt - nt * nt)*px[3]) / 2;
 		float ny = ((-nt * nt * nt + 2 * nt * nt - nt)*py[0] + (3 * nt * nt * nt - 5 * nt * nt + 2)*py[1] + (-3 * nt * nt * nt + 4 * nt * nt + nt)*py[2] + (nt * nt * nt - nt * nt)*py[3]) / 2;
