@@ -378,18 +378,40 @@ void Keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case '4':
-		if (scene == PLAY_VIEW)
+		if (scene == PLAY_VIEW) {
 			view_point = NORMAL;
+			move_x = 0.f;
+			move_y = 0.f;
+			move_z = 0.f;
+			Angle_x.radian = 0.f;
+			Angle_y.radian = 0.f;
+			Angle_z.radian = 0.f;
+		}
 		break;
 
 	case '5':
-		if (scene == PLAY_VIEW)
+		if (scene == PLAY_VIEW) {
 			view_point = HUMAN;
+			move_x = 0.f;
+			move_y = 0.f;
+			move_z = 0.f;
+			Angle_x.radian = 0.f;
+			Angle_y.radian = 0.f;
+			Angle_z.radian = 0.f;
+		}
 		break;
 
 	case '6':
-		if (scene == PLAY_VIEW)
+		if (scene == PLAY_VIEW) {
 			view_point = ROLLERCOSTER;
+			move_x = 0.f;
+			move_y = 0.f;
+			move_z = 0.f;
+			Angle_x.radian = 0.f;
+			Angle_y.radian = 0.f;
+			Angle_z.radian = 0.f;
+		}
+
 		break;
 
 	case '8':
