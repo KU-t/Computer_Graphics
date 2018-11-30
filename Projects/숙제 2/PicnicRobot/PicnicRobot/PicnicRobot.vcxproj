@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Human.cpp" />
     <ClCompile Include="Ingame.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="Snow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Human.h" />
     <ClInclude Include="Ingame.h" />

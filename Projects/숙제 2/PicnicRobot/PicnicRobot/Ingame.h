@@ -10,6 +10,7 @@
 #include "Rail.h"
 #include "Human.h"
 #include "Snow.h"
+#include "Bullet.h"
 
 using namespace std;
 
@@ -27,6 +28,10 @@ using namespace std;
 #define PILLAR_CIRCLE_RADIUS 30.f
 
 #define MAX_HUMAN 3
+
+#define MAX_BULLET 30
+#define BULLET_SIZE 10
+#define BULLET_SPEED 10
 
 #define SPLINE_COUNT 100
 
@@ -53,6 +58,8 @@ void Draw_Objects();
 void Change_Scene(SCENE in_scene, float in_move_x, float in_move_y, float in_move_z, float in_Angle_x_radian, VIEW in_view);
 void Add_Pillar(float x, float z);
 int Find_Pillar();
+void Add_Bullet(float x, float z, float rad);
+int Find_Bullet();
 bool Collision_Pillar_mouse(SCENE scene, float px, float py, float mx, float my);
 bool Collision_New_Pillar(float px, float pz, float mx, float my, float in_access_size);
 bool Collision_Pillar_Pillar(float p1_x, float p1_z, float p2_x, float p2_z, float p_access_size);
@@ -63,6 +70,8 @@ void Draw_Pillars_Spline();
 void Draw_rollercoaster();
 void Draw_tunnel();
 void Update_Snow();
+bool Collision_bullet(float bx, float bz);
+
 
 class Angle {
 public:

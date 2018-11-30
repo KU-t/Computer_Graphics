@@ -6,6 +6,7 @@ Ground ground;
 Pillar *pillar[MAX_ROCK_PILLAR];
 Rail rail;
 Human *human[MAX_HUMAN];
+Bullet *bullet[MAX_BULLET];
 Snow *snow[MAX_SNOW];
 
 Angle Angle_x(90.f), Angle_y, Angle_z;
@@ -49,6 +50,8 @@ void main(int argc, char **argv) {
 
 	for (int i = 0; i < MAX_SNOW; i++) snow[i] = NULL;
 
+	for (int i = 0; i < MAX_BULLET; i++) bullet[i] = NULL;
+			
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); // 디스플레이 모드 설정
 	glutInitWindowPosition(100, 100);
@@ -127,6 +130,9 @@ GLvoid drawScene(GLvoid) {
 			if (snow[i])	snow[i]->Draw(wether);
 		}
 	
+		for (int i = 0; i < MAX_BULLET; i++) {
+			if (bullet[i])	bullet[i]->Draw();
+		}
 	}
 
 	glPopMatrix();
@@ -328,6 +334,13 @@ void Timer(int value) {
 			human[1]->rad_move = human[MAX_HUMAN - 1]->rad_move;
 		}
 
+		for (int i = 0; i < MAX_BULLET; i++) {
+			if (bullet[i]) {
+				bullet[i]->Update();
+				if (Collision_bullet(bullet[i]->x, bullet[i]->z))	bullet[i] = NULL;
+			}
+		}
+
 		Update_Snow();
 	}
 
@@ -498,6 +511,10 @@ void Keyboard(unsigned char key, int x, int y) {
 			}
 		}
 		break;
+
+	case 'b': case 'B':
+		if (scene == PLAY_VIEW) Add_Bullet(human[MAX_HUMAN -1]->x, human[MAX_HUMAN - 1]->z, human[MAX_HUMAN - 1]->rad_move);
+		break;
 	}
 	glutPostRedisplay();
 }
@@ -608,6 +625,21 @@ void Add_Pillar(float x, float z) {
 int Find_Pillar() {
 	for (int i = 0; i < MAX_ROCK_PILLAR; i++) {
 		if (pillar[i] == NULL) return i;
+	}
+	return -1;
+}
+
+void Add_Bullet(float x, float z, float rad) {
+	int index = Find_Bullet();
+
+	if (index < 0)	return;
+
+	bullet[index] = new Bullet(x, -350, z, rad);
+}
+
+int Find_Bullet() {
+	for (int i = 0; i < MAX_BULLET; i++) {
+		if (bullet[i] == NULL) return i;
 	}
 	return -1;
 }
@@ -788,4 +820,28 @@ void Update_Snow() {
 			if (snow[i]->y <= 0.f) snow[i] = NULL;
 		}
 	}
+}
+
+bool Collision_bullet(float bx, float bz) {
+	if (bx <= -WINDOW_SIZE_X)	return true;
+	if (WINDOW_SIZE_X <= bx)	return true;
+	if (bz <= -WINDOW_SIZE_Z)	return true;
+	if (WINDOW_SIZE_Z <= bz)	return true;
+
+	for (int i = 0; i < MAX_HUMAN -1; i++) {
+		if (human[i]) {
+			if (Collision_CIrcles(human[i]->x, human[i]->z, HUMAN_SIZE, bx, bz, BULLET_SIZE)) {
+				return true;
+			}
+		}
+	}
+
+	for (int i = 0; i < MAX_PILLAR; i++) {
+		if (pillar[i]) {
+			if (Collision_CIrcles(pillar[i]->x, pillar[i]->z, PILLAR_CIRCLE_RADIUS, bx, bz, BULLET_SIZE)) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
