@@ -1,0 +1,84 @@
+﻿  APPLE.cpp
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\apple.cpp(23): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\apple.cpp(24): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\apple.cpp(25): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\apple.cpp(34): warning C4838: 'double'에서 'GLfloat'(으)로의 변환에는 축소 변환이 필요합니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\apple.cpp(34): warning C4305: '초기화 중': 'double'에서 'GLfloat'(으)로 잘립니다.
+  BALL.cpp
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\ball.cpp(39): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\ball.cpp(43): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  GRAPE.cpp
+  ITEM.cpp
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\item.cpp(25): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\item.cpp(26): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\item.cpp(27): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  main.cpp
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(54): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(232): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(239): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(241): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(242): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(243): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(258): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(259): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(879): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(949): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1032): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1038): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1044): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1055): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1061): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1072): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1078): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1084): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1165): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1171): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1177): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1183): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1189): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1196): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1202): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1208): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1214): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1221): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1227): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1233): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1239): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1246): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1252): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1258): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1264): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1287): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1293): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1299): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1305): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1312): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1318): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1324): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1331): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1337): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1343): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1349): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1356): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1362): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1368): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1374): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\main.cpp(1381): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+  Particle.cpp
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\particle.cpp(56): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  PUMPKIN.cpp
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\pumpkin.cpp(33): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\pumpkin.cpp(34): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Rect.cpp
+  TANGERINE.cpp
+  TOMATO.cpp
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\tomato.cpp(22): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\tomato.cpp(23): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\태균\desktop\opengl_final_project\opengl_final_project\opengl_final_project\tomato.cpp(24): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  WATERMELLON.cpp
+  코드를 생성하고 있습니다.
+  275 of 275 functions (100.0%) were compiled, the rest were copied from previous compilation.
+    19 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  OpenGL_Final_Project.vcxproj -> C:\Users\태균\Desktop\OpenGL_Final_Project\OpenGL_Final_Project\Release\OpenGL_Final_Project.exe
